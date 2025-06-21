@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Korpa - InviTeens</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      background-color: #1e1e1e;
+      padding: 20px;
+      position: relative;
+      z-index: 1000;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.6rem;
+      user-select: none;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+    }
+    .logo-pink {
+      color: #ff4081;
+    }
+    .logo-blue {
+      color: #2196f3;
+    }
+    #menu-toggle {
+      position: fixed;
+      top: 22px;
+      right: 22px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+      z-index: 2001;
+      background: none;
+      border: none;
+      padding: 0;
+      height: 40px;
+      width: 40px;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    #menu-toggle.open {
+      background: #1e1e1e;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px #0006;
+    }
+    #menu-toggle:focus {
+      outline: 2px solid #2196f3;
+      outline-offset: 2px;
+    }
+    #menu-toggle span {
+      width: 25px;
+      height: 3px;
+      background: #ff4081;
+      border-radius: 2px;
+      transition: 0.3s;
+      display: block;
+    }
+    #menu-toggle.open span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    #menu-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+    #menu-toggle.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      right: -260px;
+      width: 220px;
+      height: 100vh;
+      background: #1e1e1e;
+      flex-direction: column;
+      padding-top: 80px;
+      gap: 1.2rem;
+      transition: right 0.3s cubic-bezier(.77,0,.18,1);
+      z-index: 1050;
+      box-shadow: -2px 0 10px #0008;
+      display: flex;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    nav.show {
+      right: 0;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    nav a {
+      color: #ff4081;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      transition: color 0.2s, background 0.2s;
+      border-radius: 6px;
+      margin: 0 10px;
+      display: block;
+    }
+    nav a:hover, nav a:focus {
+      color: #fff;
+      background: #2196f3;
+      outline: none;
+    }
+    #nav-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1040;
+      transition: opacity 0.3s;
+    }
+    #nav-backdrop.show {
+      display: block;
+    }
+    main {
+      flex: 1;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 40px;
+      color: #ff4081;
+    }
+    .cart-container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px #ff4081;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 15px 0;
+      border-bottom: 1px solid #444;
+      gap: 20px;
+    }
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+    .cart-item h3 {
+      margin: 0;
+      color: #ff4081;
+    }
+    .remove-btn {
+      background: linear-gradient(90deg,#2196f3,#ff4081);
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+    .remove-btn:hover {
+      background: linear-gradient(90deg,#ff4081,#2196f3);
+    }
+    .total {
+      text-align: right;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .quantity-input {
+      width: 60px;
+      padding: 4px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .cart-actions {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #444;
+    }
+    .checkout-btn {
+      background: linear-gradient(135deg, #ff4081, #2196f3);
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: opacity 0.2s;
+    }
+    .checkout-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .continue-btn {
+      display: inline-block;
+      margin-top: 20px;
+      margin-left: 20px;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+    .checkout-note {
+      margin-top: 15px;
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+    .clear-btn {
+      background: linear-gradient(90deg,#ff4081,#2196f3);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 20px;
+      transition: background 0.2s;
+    }
+    .clear-btn:hover {
+      background: linear-gradient(90deg,#2196f3,#ff4081);
+    }
+    .empty-message {
+      text-align: center;
+      margin: 50px 0;
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background-color: #1e1e1e;
+      margin: 10% auto;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      color: #fff;
+      box-shadow: 0 0 20px #ff4081;
+      text-align: center;
+    }
+    .modal-content input,
+    .modal-content select {
+      display: block;
+      margin: 10px auto 20px auto;
+      width: 90%;
+      max-width: 300px;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+    }
+    .modal-content button {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .close {
+      float: right;
+      font-size: 24px;
+      cursor: pointer;
+      color: #aaa;
+    }
+    .comment-saved {
+      display: none;
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      color: #4caf50;
+      font-size: 1.2em;
+    }
+    @media (max-width: 900px) {
+      nav {
+        width: 80vw;
+        min-width: 160px;
+        max-width: 320px;
+      }
+    }
+    @media (max-width: 600px) {
+      .cart-item {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .remove-btn {
+        width: 100%;
+        margin-top: 16px;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+      }
+      header {
+        padding: 12px;
+      }
+      .logo {
+        font-size: 1.1rem;
+      }
+      nav {
+        padding-top: 60px;
+      }
+      #menu-toggle {
+        top: 12px;
+        right: 12px;
+        height: 36px;
+        width: 36px;
+      }
+      footer {
+        padding: 18px 5px;
+        font-size: 0.85rem;
+      }
+      .footer-links {
+        gap: 4px;
+        font-size: 0.97em;
+      }
+    }
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: 5rem;
+      background-color: #1e1e1e;
+      padding: 30px 20px;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .footer-links a {
+      white-space: nowrap;
+      margin: 0 2px;
+    }
+    footer a {
+      color: #aaa;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+    #modalImg {
+  max-width: 300px;
+  max-height: 300px;
+  border-radius: 18px;
+  box-shadow: 0 0 30px #2196f3;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" tabindex="0">
+      <span class="logo-pink">Invi</span><span class="logo-blue">Teens</span>
+    </div>
+    <button id="menu-toggle" aria-label="Otvorite meni" role="button" tabindex="0">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="nav-menu" aria-label="Glavna navigacija">
+    <a href="index.html" tabindex="0"><i class="fa-solid fa-house"></i> Početna</a>
+    <a href="products.html" tabindex="0"><i class="fa-solid fa-envelope"></i> Pozivnice</a>
+    <a href="custom.html" tabindex="0"><i class="fa-solid fa-pen-nib"></i> Pravljenje</a>
+    <a href="contact.html" tabindex="0"><i class="fa-solid fa-phone"></i> Kontakt</a>
+    <a href="location.html" tabindex="0"><i class="fa-solid fa-location-dot"></i> Lokacija</a>
+    <a href="about.html"><i class="fa-solid fa-users"></i> O nama</a>
+    <a href="cart.html" tabindex="0"><i class="fa-solid fa-cart-shopping"></i> Korpa</a>
+  </nav>
+    <div id="nav-backdrop"></div>
+  </header>
+  <main>
+    <h1>🛒 Vaša korpa</h1>
+    <div class="cart-container" id="cart-container"></div>
+    <div class="cart-actions" id="cart-actions" style="display: none;">
+      <button class="clear-btn" id="clear-cart">🗑️ Isprazni korpu</button>
+    </div>
+    <!-- Modal za prikaz slike -->
+    <div id="imgModal" class="modal" style="display:none;align-items:center;justify-content:center;">
+      <span class="close" id="closeImgModal" style="position:absolute;top:20px;right:30px;font-size:2.5rem;cursor:pointer;color:#ff4081;">&times;</span>
+      <img id="modalImg" src="" alt="Uvećana slika">
+    </div>
+  </main>
+  <div id="orderModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h3>Unesite podatke za isporuku</h3>
+      <input type="text" id="name" placeholder="Vaše ime">
+      <input type="email" id="email" placeholder="Vaš email">
+      <select id="payment">
+        <option value="kartica">💳 Plaćanje karticom</option>
+        <option value="pouzecem">💵 Plaćanje pouzećem</option>
+      </select>
+      <button id="confirmOrder">✅ Potvrdi porudžbinu</button>
+    </div>
+  </div>
+  <footer>
+    <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
+    <div class="footer-links">
+      <a href="index.html">Početna</a>|
+      <a href="products.html">Pozivnice</a>|
+      <a href="custom.html">Pravljenje</a>|
+      <a href="contact.html">Kontakt</a>|
+      <a href="location.html">Lokacija</a>|
+      <a href="about.html">O nama</a>
+    </div>
+    <p style="font-size: 0.9rem; color: #bbb;">Prati nas na:
+        <a href="https://facebook.com" target="_blank" rel="noopener" style="color:#2d53a5; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-facebook"></i> Facebook</a> |
+        <a href="https://instagram.com" target="_blank" rel="noopener" style="color:#c4166d; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-instagram"></i> Instagram</a> |
+        <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#1da1f2; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-twitter"></i> Twitter</a> |
+        <a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
+      </p>
+  </footer>
+  <script>
+    // Hamburger meni funkcionalnost
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    const navBackdrop = document.getElementById('nav-backdrop');
+
+    function openMenu() {
+      menuToggle.classList.add('open');
+      navMenu.classList.add('show');
+      navBackdrop.classList.add('show');
+      setTimeout(() => {
+        const firstLink = navMenu.querySelector('a');
+        if (firstLink) firstLink.focus();
+      }, 200);
+    }
+    function closeMenu() {
+      menuToggle.classList.remove('open');
+      navMenu.classList.remove('show');
+      navBackdrop.classList.remove('show');
+      menuToggle.focus();
+    }
+
+    menuToggle.addEventListener('click', () => {
+      if (navMenu.classList.contains('show')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    menuToggle.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (navMenu.classList.contains('show')) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      }
+    });
+
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+    navBackdrop.addEventListener('click', closeMenu);
+
+    document.addEventListener('keydown', e => {
+      if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('show')) {
+        closeMenu();
+      }
+    });
+
+    let touchStartX = null;
+    document.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+      }
+    });
+    document.addEventListener('touchend', function(e) {
+      if (touchStartX !== null && e.changedTouches.length === 1) {
+        let touchEndX = e.changedTouches[0].clientX;
+        if (touchStartX > window.innerWidth - 40 && touchEndX < touchStartX - 30 && !navMenu.classList.contains('show')) {
+          openMenu();
+        }
+        if (navMenu.classList.contains('show') && touchEndX > touchStartX + 30) {
+          closeMenu();
+        }
+      }
+      touchStartX = null;
+    });
+
+    // KORPA LOGIKA
+    const cartContainer = document.getElementById('cart-container');
+    const cartActions = document.getElementById('cart-actions');
+    const modal = document.getElementById('orderModal');
+    const closeModal = document.getElementById('closeModal');
+    const confirmBtn = document.getElementById('confirmOrder');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const paymentSelect = document.getElementById('payment');
+    // Modal za slike
+    const imgModal = document.getElementById('imgModal');
+    const modalImg = document.getElementById('modalImg');
+    const closeImgModal = document.getElementById('closeImgModal');
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let finalTotal = 0;
+
+    function updateLocalStorage() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function renderCart() {
+      cartContainer.innerHTML = '';
+      // Ukupan broj artikala
+      const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+      const itemsCountDiv = document.createElement('div');
+      itemsCountDiv.style.textAlign = 'center';
+      itemsCountDiv.style.marginBottom = '18px';
+      itemsCountDiv.style.fontWeight = 'bold';
+      itemsCountDiv.innerHTML = `Ukupno artikala: <span style="color:#ff4081">${totalItems}</span>`;
+      if (cart.length > 0) cartContainer.appendChild(itemsCountDiv);
+
+      if (cart.length === 0) {
+        cartContainer.innerHTML = `
+          <p class="empty-message">Vaša korpa je prazna.</p>
+          <div style="text-align:center;margin-top:20px;">
+            <a href="products.html" class="checkout-btn" style="text-decoration:none;">Pogledaj proizvode</a>
+          </div>
+        `;
+        cartActions.style.display = 'none';
+        return;
+      }
+      cartActions.style.display = 'block';
+      let total = 0;
+      cart.forEach((item, index) => {
+        const price = parseInt(item.price);
+        const quantity = item.quantity || 1;
+        const itemTotal = price * quantity;
+        total += itemTotal;
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-item';
+        itemDiv.innerHTML = `
+          <div style="flex:1;">
+            ${item.img ? `<img src="${item.img}" alt="${item.name}" class="cart-img" data-img="${item.img}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;margin-bottom:8px;float:left;margin-right:12px;cursor:pointer;box-shadow:0 0 8px #2196f3;">` : ''}
+            <h3>${item.name}</h3>
+            <p>Cena: ${price} RSD</p>
+            <p>Količina: <input type="number" min="1" value="${quantity}" data-index="${index}" class="quantity-input"></p>
+            <p>${item.desc || ''}</p>
+            <label style="font-size:0.97em;color:#ff4081;font-weight:500;display:block;margin-top:8px;">Komentar uz porudžbinu:</label>
+            <div style="position:relative;">
+              <textarea class="comment-input" data-index="${index}" placeholder="Imena: Mesta: Vreme: i dodatne informacije" style="width:98%;min-height:48px;margin-top:4px;border-radius:6px;border:none;padding:8px;background:#191a1e;color:#fff;transition:box-shadow 0.2s;resize:none;overflow:auto;">${item.comment ? item.comment : ''}</textarea>
+              <span class="comment-saved" style="display:none;position:absolute;right:10px;bottom:10px;color:#4caf50;font-size:1.2em;">✔️</span>
+            </div>
+          </div>
+          <button class="remove-btn" data-index="${index}">Ukloni</button>
+        `;
+        cartContainer.appendChild(itemDiv);
+      });
+      let popust = total >= 3000 ? total * 0.1 : 0;
+      finalTotal = total - popust;
+      const totalDiv = document.createElement('div');
+      totalDiv.className = 'total';
+      totalDiv.innerHTML = popust > 0
+        ? `Ukupno: <s>${total} RSD</s> <span style="color:#4caf50;" title="Ostvarili ste 10% popusta jer je iznos preko 3000 RSD!">${finalTotal} RSD</span> <span style="cursor:help;" title="Ostvarili ste 10% popusta jer je iznos preko 3000 RSD!">🛈</span> (10% popusta 🎉)`
+        : `Ukupno: ${total} RSD`;
+      cartContainer.appendChild(totalDiv);
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'cart-actions';
+      const checkoutBtn = document.createElement('button');
+      checkoutBtn.className = 'checkout-btn';
+      checkoutBtn.textContent = '🛍️ Naruči odmah';
+      checkoutBtn.disabled = cart.length === 0;
+      checkoutBtn.style.opacity = cart.length === 0 ? '0.5' : '1';
+      checkoutBtn.addEventListener('click', () => {
+        loadUserData();
+        modal.style.display = 'block';
+      });
+      const continueBtn = document.createElement('a');
+      continueBtn.href = "products.html";
+      continueBtn.className = 'continue-btn';
+      continueBtn.textContent = '⬅️ Nastavi kupovinu';
+      const note = document.createElement('p');
+      note.className = 'checkout-note';
+      note.textContent = 'Besplatna dostava za porudžbine preko 3000 RSD.';
+      actionsDiv.appendChild(checkoutBtn);
+      actionsDiv.appendChild(continueBtn);
+      actionsDiv.appendChild(note);
+      cartContainer.appendChild(actionsDiv);
+    }
+
+    // Prikaz slike u modalu na klik
+    cartContainer.addEventListener('click', e => {
+      if (e.target.classList.contains('cart-img')) {
+        modalImg.src = e.target.dataset.img;
+        imgModal.style.display = 'flex';
+      }
+      if (e.target.classList.contains('remove-btn')) {
+        const index = parseInt(e.target.dataset.index);
+        if (!isNaN(index)) {
+          Swal.fire({
+            title: "Ukloniti ovaj artikal iz korpe?",
+            icon: "warning",
+            background: "#191a1e",
+            color: "#fff",
+            confirmButtonColor: "#2196f3",
+            denyButtonColor: "#ff4081",
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Ukloni",
+            denyButtonText: `Odustani`
+          }).then((result) => {
+            if (result.isConfirmed) {
+              cart.splice(index, 1);
+              updateLocalStorage();
+              renderCart();
+              Swal.fire({
+                title: "Uklonjeno!",
+                icon: "success",
+                background: "#191a1e",
+                color: "#fff",
+                confirmButtonColor: "#2196f3"
+              });
+            }
+          });
+        }
+      }
+    });
+
+    // Modal za sliku - zatvaranje
+    closeImgModal.onclick = () => imgModal.style.display = 'none';
+    imgModal.onclick = (e) => { if (e.target === imgModal) imgModal.style.display = 'none'; };
+
+    // Vizuelni feedback za komentar i količinu
+    cartContainer.addEventListener('input', e => {
+      if (e.target.classList.contains('quantity-input')) {
+        const index = parseInt(e.target.dataset.index);
+        const newQuantity = parseInt(e.target.value);
+        if (newQuantity > 0) {
+          cart[index].quantity = newQuantity;
+          updateLocalStorage();
+          // Animacija
+          e.target.style.background = "#4caf50";
+          setTimeout(() => { e.target.style.background = ""; }, 300);
+          renderCart();
+        }
+      }
+      if (e.target.classList.contains('comment-input')) {
+        const index = parseInt(e.target.dataset.index);
+        cart[index].comment = e.target.value;
+        updateLocalStorage();
+        // Prikaz ✔️
+        const saved = e.target.parentElement.querySelector('.comment-saved');
+        if (saved) {
+          saved.style.display = 'inline';
+          setTimeout(() => { saved.style.display = 'none'; }, 1000);
+        }
+      }
+    });
+
+    document.getElementById('clear-cart').addEventListener('click', () => {
+      Swal.fire({
+            title: "Da li ste sigurni da zelite isprazniti korpu?",
+            icon: "warning",
+            background: "#191a1e",
+            color: "#fff",
+            confirmButtonColor: "#2196f3",
+            denyButtonColor: "#ff4081",
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Obrisi",
+            denyButtonText: `Ipak ne`
+      }).then((result) => {
+        if (result.isConfirmed) {
+            cart = [];
+            updateLocalStorage();
+            renderCart();
+            Swal.fire({
+              title: "Korpa obrisana",
+              icon: "success",
+              background: "#191a1e",
+              color: "#fff",
+              confirmButtonColor: "#2196f3"
+            });
+        }
+      });
+    });
+
+    closeModal.onclick = () => modal.style.display = 'none';
+    window.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
+
+    function loadUserData() {
+      const saved = JSON.parse(localStorage.getItem('userData'));
+      if (saved) {
+        nameInput.value = saved.name || '';
+        emailInput.value = saved.email || '';
+        paymentSelect.value = saved.payment || 'kartica';
+      }
+    }
+
+    confirmBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const payment = paymentSelect.value;
+
+      if (!name || !email) {
+        Swal.fire({
+          title: "Molimo unesite ime i email adresu.",
+          icon: "error",
+          background: "#191a1e",
+          color: "#fff",
+          confirmButtonColor: "#ff4081"
+        });
+        return;
+      }
+
+      localStorage.setItem('userData', JSON.stringify({ name, email, payment }));
+
+      if (payment === 'kartica') {
+        window.location.href = 'payment.html';
+      } else {
+        window.location.href = 'cash.html';
+      }
+    });
+
+    renderCart();
+  </script>
+</body>
+</html>

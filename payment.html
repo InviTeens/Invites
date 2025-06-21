@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plaćanje karticom | InviTeens</title>
+  <style>
+    :root {
+      --accent-pink: #ff4081;
+      --accent-blue: #2196f3;
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --text-light: #eee;
+      --error: #e53935;
+      --success: #4caf50;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header, footer {
+      background: var(--bg-card);
+      padding: 14px 0;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.7);
+    }
+    header h2 {
+      font-size: 1.8rem;
+      color: #ff4081;
+      letter-spacing: 2px;
+    }
+    header .logo-blue { color: #2196f3; }
+    main {
+      flex: 1;
+      padding: 4px 0 4px 0; /* još manji razmak gore/dole */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .box {
+      max-width: 480px;
+      width: 100%;
+      background: var(--bg-card);
+      border-radius: 18px;
+      padding: 38px 32px 28px 32px;
+      box-shadow: 0 0 18px rgba(33,150,243,0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .box h1 {
+      color: var(--accent-pink);
+      margin-bottom: 18px;
+      font-size: 1.35rem;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .card-visual {
+      width: 100%;
+      background: linear-gradient(120deg, var(--accent-blue) 60%, var(--accent-pink) 100%);
+      border-radius: 16px;
+      padding: 18px 18px 14px 18px;
+      margin-bottom: 18px;
+      color: #fff;
+      box-shadow: 0 2px 12px #2196f355;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-height: 90px;
+      font-family: 'Segoe UI', monospace;
+      font-size: 1.13rem;
+      letter-spacing: 1.2px;
+      position: relative;
+    }
+    .card-visual .chip {
+      width: 36px;
+      height: 22px;
+      background: #ffe082;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px #0002;
+    }
+    .card-visual .number {
+      font-size: 1.13rem;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+      font-family: 'Segoe UI', monospace;
+    }
+    .card-visual .details {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      font-size: 1.01rem;
+      opacity: 0.92;
+    }
+    .box form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .box input {
+      width: 100%;
+      padding: 13px;
+      margin: 4px 0 0 0;
+      border-radius: 7px;
+      border: 1.5px solid #222;
+      background-color: #232323;
+      color: #fff;
+      font-size: 1.08rem;
+      transition: box-shadow 0.3s, border 0.3s;
+      outline: none;
+    }
+    .box input:focus {
+      border: 1.5px solid var(--accent-pink);
+      box-shadow: 0 0 5px 2px var(--accent-pink);
+    }
+    .box input.error {
+      border: 1.5px solid var(--error);
+      background: #2a181a;
+    }
+    .error-message {
+      color: var(--error);
+      font-size: 0.97rem;
+      margin: 1px 0 0 2px;
+      min-height: 16px;
+      text-align: left;
+    }
+    .box button {
+      margin-top: 14px;
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
+      color: #fff;
+      font-size: 1.09rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .3s, transform .2s;
+      box-shadow: 0 2px 8px #0003;
+    }
+    .box button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-pink));
+    }
+    .note {
+      font-size: 0.95rem;
+      color: #bbb;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 0.97rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: var(--accent-pink);
+    }
+    footer p {
+      font-size: 0.9rem;
+      color: #777;
+    }
+    @media (max-width: 600px) {
+      header, footer { padding: 10px; }
+      main { padding: 2px 2vw 2px 2vw; }
+      .box { padding: 10px 2vw 10px 2vw; max-width: 98vw; }
+      .card-visual { padding: 7px 6px 7px 6px; font-size: 0.97rem; }
+      .box h1 { font-size: 1.05rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Invi<span class="logo-blue">Teens</span></h2>
+  </header>
+
+  <main>
+    <div class="box">
+      <h1>Plaćanje karticom</h1>
+      <div class="card-visual" id="cardVisual">
+        <div class="chip"></div>
+        <div class="number" id="visualNumber">•••• •••• •••• ••••</div>
+        <div class="details">
+          <span id="visualName">IME I PREZIME</span>
+          <span id="visualExpiry">MM/YY</span>
+        </div>
+      </div>
+      <form id="paymentForm" novalidate>
+        <input type="text" id="cardName" placeholder="Ime i prezime na kartici" autocomplete="cc-name" required>
+        <div class="error-message" id="nameError"></div>
+        <input type="text" id="cardNumber" placeholder="Broj kartice" autocomplete="cc-number" required maxlength="19">
+        <div class="error-message" id="numberError"></div>
+        <input type="text" id="expiry" placeholder="MM/YY" autocomplete="cc-exp" required maxlength="5">
+        <div class="error-message" id="expiryError"></div>
+        <input type="text" id="cvv" placeholder="CVV" autocomplete="cc-csc" required maxlength="4">
+        <div class="error-message" id="cvvError"></div>
+        <button type="submit">Potvrdi plaćanje</button>
+        <p class="note">Transakcija je sigurna i šifrovana <span aria-label="zaključano">🔒</span></p>
+      </form>
+      <a href="cart.html" class="back-link">← Nazad na korpu</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
+  </footer>
+
+  <script>
+    // Elementi
+    const form = document.getElementById('paymentForm');
+    const cardNumber = document.getElementById('cardNumber');
+    const expiry = document.getElementById('expiry');
+    const cvv = document.getElementById('cvv');
+    const cardName = document.getElementById('cardName');
+
+    // Vizuelizacija kartice
+    const visualNumber = document.getElementById('visualNumber');
+    const visualName = document.getElementById('visualName');
+    const visualExpiry = document.getElementById('visualExpiry');
+
+    // Error poruke
+    const nameError = document.getElementById('nameError');
+    const numberError = document.getElementById('numberError');
+    const expiryError = document.getElementById('expiryError');
+    const cvvError = document.getElementById('cvvError');
+
+    // Funkcija za automatsko uklanjanje poruka i crvene klase
+    function clearErrorAfter(el, input) {
+      setTimeout(() => {
+        el.textContent = "";
+        if (input) input.classList.remove('error');
+      }, 3000);
+    }
+
+    // Formatiranje broja kartice
+    cardNumber.addEventListener('input', function (e) {
+      let value = e.target.value.replace(/\D/g, '').slice(0,16);
+      value = value.match(/.{1,4}/g)?.join(' ') ?? '';
+      e.target.value = value;
+      // Vizuelizacija
+      visualNumber.textContent = value.padEnd(19, '•') || '•••• •••• •••• ••••';
+    });
+
+    // Formatiranje datuma isteka
+    expiry.addEventListener('input', function (e) {
+      let value = e.target.value.replace(/\D/g, '').slice(0,4);
+      if (value.length > 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+      }
+      e.target.value = value;
+      // Vizuelizacija
+      if (value.length === 2 && !value.includes('/')) {
+        visualExpiry.textContent = value + '/YY';
+      } else {
+        visualExpiry.textContent = value || 'MM/YY';
+      }
+    });
+
+    // Samo brojevi za CVV
+    cvv.addEventListener('input', function (e) {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0,4);
+    });
+
+    // Vizuelizacija imena
+    cardName.addEventListener('input', function (e) {
+      visualName.textContent = e.target.value.trim().toUpperCase() || 'IME I PREZIME';
+    });
+
+    // Validacija
+    function validateName(name) {
+      return /^[A-Za-zČĆŽŠĐčćžšđ\s\-']{4,}$/.test(name.trim());
+    }
+    function validateNumber(number) {
+      // Luhn algoritam za validaciju broja kartice
+      let num = number.replace(/\s/g, '');
+      if (!/^\d{16}$/.test(num)) return false;
+      let sum = 0, shouldDouble = false;
+      for (let i = num.length - 1; i >= 0; i--) {
+        let digit = parseInt(num.charAt(i));
+        if (shouldDouble) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+        shouldDouble = !shouldDouble;
+      }
+      return sum % 10 === 0;
+    }
+    function validateExpiry(expiry) {
+      if (!/^\d{2}\/\d{2}$/.test(expiry)) return false;
+      const [mm, yy] = expiry.split('/').map(Number);
+      if (mm < 1 || mm > 12) return false;
+      // Provera da li je datum u budućnosti
+      const now = new Date();
+      const year = 2000 + yy;
+      const month = mm - 1;
+      const expiryDate = new Date(year, month + 1, 0);
+      return expiryDate >= new Date(now.getFullYear(), now.getMonth(), 1);
+    }
+    function validateCVV(cvv) {
+      return /^\d{3,4}$/.test(cvv);
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Reset poruka i klasa
+      [cardName, cardNumber, expiry, cvv].forEach(i => i.classList.remove('error'));
+      [nameError, numberError, expiryError, cvvError].forEach(e => e.textContent = '');
+
+      let valid = true;
+
+      // Ime
+      if (!validateName(cardName.value)) {
+        nameError.textContent = 'Unesite puno ime i prezime (min 4 slova).';
+        cardName.classList.add('error');
+        clearErrorAfter(nameError, cardName);
+        valid = false;
+      }
+      // Broj kartice
+      if (!validateNumber(cardNumber.value)) {
+        numberError.textContent = 'Unesite ispravan broj kartice.';
+        cardNumber.classList.add('error');
+        clearErrorAfter(numberError, cardNumber);
+        valid = false;
+      }
+      // Datum isteka
+      if (!validateExpiry(expiry.value)) {
+        expiryError.textContent = 'Unesite ispravan datum (MM/YY) u budućnosti.';
+        expiry.classList.add('error');
+        clearErrorAfter(expiryError, expiry);
+        valid = false;
+      }
+      // CVV
+      if (!validateCVV(cvv.value)) {
+        cvvError.textContent = 'Unesite ispravan CVV (3 ili 4 cifre).';
+        cvv.classList.add('error');
+        clearErrorAfter(cvvError, cvv);
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      // Ako je sve u redu, idi na stranicu za potvrdu
+      window.location.href = 'purchase.html';
+    });
+
+    // Funkcija za automatsko uklanjanje poruka i crvene klase
+    function clearErrorAfter(el, input) {
+      setTimeout(() => {
+        el.textContent = "";
+        if (input) input.classList.remove('error');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

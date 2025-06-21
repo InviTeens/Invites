@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lokacija | InviTeens</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      background-color: #1e1e1e;
+      padding: 20px;
+      position: relative;
+      z-index: 1000;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.6rem;
+      user-select: none;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+    }
+    .logo-pink {
+      color: #ff4081;
+    }
+    .logo-blue {
+      color: #2196f3;
+    }
+    /* Hamburger meni - uvek prikazan i fiksiran */
+    #menu-toggle {
+      position: fixed;
+      top: 22px;
+      right: 22px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+      z-index: 2001;
+      background: none;
+      border: none;
+      padding: 0;
+      height: 40px;
+      width: 40px;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    #menu-toggle.open {
+      background: #1e1e1e;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px #0006;
+    }
+    #menu-toggle:focus {
+      outline: 2px solid #2196f3;
+      outline-offset: 2px;
+    }
+    #menu-toggle span {
+      width: 25px;
+      height: 3px;
+      background: #ff4081;
+      border-radius: 2px;
+      transition: 0.3s;
+      display: block;
+    }
+    #menu-toggle.open span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    #menu-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+    #menu-toggle.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+    /* NAVIGACIJA - uvek skrivena, otvara se sa desne strane */
+    nav {
+      position: fixed;
+      top: 0;
+      right: -260px;
+      width: 220px;
+      height: 100vh;
+      background: #1e1e1e;
+      flex-direction: column;
+      padding-top: 80px;
+      gap: 1.2rem;
+      transition: right 0.3s cubic-bezier(.77,0,.18,1);
+      z-index: 1050;
+      box-shadow: -2px 0 10px #0008;
+      display: flex;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    nav.show {
+      right: 0;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    nav a {
+      color: #ff4081;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      transition: color 0.2s, background 0.2s;
+      border-radius: 6px;
+      margin: 0 10px;
+      display: block;
+    }
+    nav a:hover, nav a:focus {
+      color: #fff;
+      background: #2196f3;
+      outline: none;
+    }
+    /* Zatamnjena pozadina kad je meni otvoren */
+    #nav-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1040;
+      transition: opacity 0.3s;
+    }
+    #nav-backdrop.show {
+      display: block;
+    }
+    /* MAIN */
+    main {
+      flex: 1;
+      padding: 30px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #ff4081;
+      margin-bottom: 30px;
+    }
+    .map-container {
+      width: 100%;
+      height: 600px;
+      margin-bottom: 40px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px #2196f3;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .info-blocks {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+    .info {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #444;
+    }
+    .info h3 {
+      color: #2196f3;
+      margin-top: 0;
+    }
+    @media (max-width: 900px) {
+      .info-blocks {
+        grid-template-columns: 1fr;
+      }
+      .map-container {
+        height: 300px;
+      }
+      nav {
+        width: 80vw;
+        min-width: 160px;
+        max-width: 320px;
+      }
+    }
+    @media (max-width: 600px) {
+      header {
+        padding: 12px;
+      }
+      .logo {
+        font-size: 1.1rem;
+      }
+      nav {
+        padding-top: 60px;
+      }
+      #menu-toggle {
+        top: 12px;
+        right: 12px;
+        height: 36px;
+        width: 36px;
+      }
+      footer {
+        padding: 18px 5px;
+        font-size: 0.85rem;
+      }
+      .footer-links {
+        gap: 4px;
+        font-size: 0.97em;
+      }
+    }
+    /* FOOTER */
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: 5rem;
+      background-color: #1e1e1e;
+      padding: 30px 20px;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .footer-links a {
+      white-space: nowrap;
+      margin: 0 2px;
+    }
+    footer a {
+      color: #aaa;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo" tabindex="0">
+    <span class="logo-pink">Invi</span><span class="logo-blue">Teens</span>
+  </div>
+  <button id="menu-toggle" aria-label="Otvorite meni" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </button>
+  <nav id="nav-menu" aria-label="Glavna navigacija">
+    <a href="index.html" tabindex="0"><i class="fa-solid fa-house"></i> Početna</a>
+    <a href="products.html" tabindex="0"><i class="fa-solid fa-envelope"></i> Pozivnice</a>
+    <a href="custom.html" tabindex="0"><i class="fa-solid fa-pen-nib"></i> Pravljenje</a>
+    <a href="contact.html" tabindex="0"><i class="fa-solid fa-phone"></i> Kontakt</a>
+    <a href="location.html" tabindex="0"><i class="fa-solid fa-location-dot"></i> Lokacija</a>
+    <a href="about.html"><i class="fa-solid fa-users"></i> O nama</a>
+    <a href="cart.html" tabindex="0"><i class="fa-solid fa-cart-shopping"></i> Korpa</a>
+  </nav>
+  <div id="nav-backdrop"></div>
+</header>
+
+<main>
+  <h1>📍 Gde se nalazimo</h1>
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps?q=Druge%20srpske%20armije%2023%2C%20Beograd&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+  <div class="info-blocks">
+    <div class="info">
+      <h3>Adresa</h3>
+      <p>Ulica Druge srpske armije 23, Voždovac, Beograd</p>
+    </div>
+    <div class="info">
+      <h3>Radno vreme</h3>
+      <p>Pon - Pet: 09:00 - 18:00<br>Subota: 10:00 - 14:00<br>Nedelja: Zatvoreno</p>
+    </div>
+    <div class="info">
+      <h3>Kontakt</h3>
+      <p>Telefon: +381 11 123 456<br>Email: info@inviteens.rs</p>
+    </div>
+    <div class="info">
+      <h3>Parking</h3>
+      <p>Besplatan parking ispred lokacije i u blizini.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
+  <div class="footer-links">
+    <a href="index.html">Početna</a>|
+    <a href="products.html">Pozivnice</a>|
+    <a href="custom.html">Pravljenje</a>|
+    <a href="contact.html">Kontakt</a>|
+    <a href="location.html">Lokacija</a>|
+    <a href="about.html">O nama</a>
+  </div>
+  <p style="font-size: 0.9rem; color: #bbb;">Prati nas na:
+      <a href="https://facebook.com" target="_blank" rel="noopener" style="color:#2d53a5; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-facebook"></i> Facebook</a> |
+      <a href="https://instagram.com" target="_blank" rel="noopener" style="color:#c4166d; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-instagram"></i> Instagram</a> |
+      <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#1da1f2; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-twitter"></i> Twitter</a> |
+      <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
+    </p>
+</footer>
+<script>
+  // Hamburger meni funkcionalnost
+  const menuToggle = document.getElementById('menu-toggle');
+  const navMenu = document.getElementById('nav-menu');
+  const navBackdrop = document.getElementById('nav-backdrop');
+
+  function openMenu() {
+    menuToggle.classList.add('open');
+    navMenu.classList.add('show');
+    navBackdrop.classList.add('show');
+    setTimeout(() => {
+      const firstLink = navMenu.querySelector('a');
+      if (firstLink) firstLink.focus();
+    }, 200);
+  }
+  function closeMenu() {
+    menuToggle.classList.remove('open');
+    navMenu.classList.remove('show');
+    navBackdrop.classList.remove('show');
+    menuToggle.focus();
+  }
+
+  // Klik na hamburger
+  menuToggle.addEventListener('click', () => {
+    if (navMenu.classList.contains('show')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  // Enter/Space za otvaranje menija (pristupačnost)
+  menuToggle.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (navMenu.classList.contains('show')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }
+  });
+
+  // Zatvori meni na klik linka ili na pozadinu
+  navMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+  navBackdrop.addEventListener('click', closeMenu);
+
+  // ESC za zatvaranje menija
+  document.addEventListener('keydown', e => {
+    if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('show')) {
+      closeMenu();
+    }
+  });
+
+  // Swipe gesture za otvaranje menija (mobilni)
+  let touchStartX = null;
+  document.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) {
+      touchStartX = e.touches[0].clientX;
+    }
+  });
+  document.addEventListener('touchend', function(e) {
+    if (touchStartX !== null && e.changedTouches.length === 1) {
+      let touchEndX = e.changedTouches[0].clientX;
+      // Swipe from right edge (otvori meni)
+      if (touchStartX > window.innerWidth - 40 && touchEndX < touchStartX - 30 && !navMenu.classList.contains('show')) {
+        openMenu();
+      }
+      // Swipe left to close
+      if (navMenu.classList.contains('show') && touchEndX > touchStartX + 30) {
+        closeMenu();
+      }
+    }
+    touchStartX = null;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O nama | InviTeens</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <style>
+    :root {
+      --accent-pink: #ff4081;
+      --accent-blue: #2196f3;
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --text-light: #eee;
+      --text-muted: #bbb;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-card);
+      padding: 20px;
+      position: relative;
+      z-index: 1000;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.6rem;
+      user-select: none;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+    }
+    .logo-pink {
+      color: var(--accent-pink);
+    }
+    .logo-blue {
+      color: var(--accent-blue);
+    }
+    /* Hamburger meni - uvek prikazan i fiksiran */
+    #menu-toggle {
+      position: fixed;
+      top: 22px;
+      right: 22px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+      z-index: 2001;
+      background: none;
+      border: none;
+      padding: 0;
+      height: 40px;
+      width: 40px;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    #menu-toggle.open {
+      background: var(--bg-card);
+      border-radius: 50%;
+      box-shadow: 0 2px 8px #0006;
+    }
+    #menu-toggle:focus {
+      outline: 2px solid var(--accent-blue);
+      outline-offset: 2px;
+    }
+    #menu-toggle span {
+      width: 25px;
+      height: 3px;
+      background: var(--accent-pink);
+      border-radius: 2px;
+      transition: 0.3s;
+      display: block;
+    }
+    #menu-toggle.open span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    #menu-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+    #menu-toggle.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+    /* NAVIGACIJA - uvek skrivena, otvara se sa desne strane */
+    nav {
+      position: fixed;
+      top: 0;
+      right: -260px;
+      width: 220px;
+      height: 100vh;
+      background: var(--bg-card);
+      flex-direction: column;
+      padding-top: 80px;
+      gap: 1.2rem;
+      transition: right 0.3s cubic-bezier(.77,0,.18,1);
+      z-index: 1050;
+      box-shadow: -2px 0 10px #0008;
+      display: flex;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    nav.show {
+      right: 0;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    nav a {
+      color: var(--accent-pink);
+      text-decoration: none;
+      font-weight: bold;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      transition: color 0.2s, background 0.2s;
+      border-radius: 6px;
+      margin: 0 10px;
+      display: block;
+    }
+    nav a:hover, nav a:focus {
+      color: #fff;
+      background: var(--accent-blue);
+      outline: none;
+    }
+    /* Zatamnjena pozadina kad je meni otvoren */
+    #nav-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1040;
+      transition: opacity 0.3s;
+    }
+    #nav-backdrop.show {
+      display: block;
+    }
+    /* MAIN */
+    main {
+      flex: 1;
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .section-title {
+      font-size: 2rem;
+      color: var(--accent-pink);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .content {
+      background: var(--bg-card);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(33, 150, 243, 0.3);
+      line-height: 1.6;
+      font-size: 1.1rem;
+    }
+    .content p {
+      margin-top: 1em;
+    }
+    .team {
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+    .member {
+      background: #2c2c2c;
+      padding: 20px;
+      border-radius: 10px;
+      width: 220px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
+      transition: transform 0.3s ease;
+    }
+    .member:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(33, 150, 243, 0.7);
+    }
+    .member img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 3px solid var(--accent-pink);
+    }
+    .member h3 {
+      color: var(--accent-blue);
+      margin-bottom: 5px;
+      font-size: 1.2rem;
+    }
+    .member p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .social-links a {
+      display: inline-block;
+      margin: 10px;
+      color: #ccc;
+      text-decoration: none;
+    }
+    .social-links a:hover {
+      color: #fff;
+    }
+    @media (max-width: 900px) {
+      nav {
+        width: 80vw;
+        min-width: 160px;
+        max-width: 320px;
+      }
+    }
+    @media (max-width: 600px) {
+      header {
+        padding: 12px;
+      }
+      .logo {
+        font-size: 1.1rem;
+      }
+      nav {
+        padding-top: 60px;
+      }
+      #menu-toggle {
+        top: 12px;
+        right: 12px;
+        height: 36px;
+        width: 36px;
+      }
+      footer {
+        padding: 18px 5px;
+        font-size: 0.85rem;
+      }
+      .footer-links {
+        gap: 4px;
+        font-size: 0.97em;
+      }
+    }
+    /* FOOTER */
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: 5rem;
+      background-color: var(--bg-card);
+      padding: 30px 20px;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .footer-links a {
+      white-space: nowrap;
+      margin: 0 2px;
+    }
+    footer a {
+      color: #aaa;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo" tabindex="0">
+    <span class="logo-pink">Invi</span><span class="logo-blue">Teens</span>
+  </div>
+  <button id="menu-toggle" aria-label="Otvorite meni" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </button>
+  <nav id="nav-menu" aria-label="Glavna navigacija">
+    <a href="index.html" tabindex="0"><i class="fa-solid fa-house"></i> Početna</a>
+    <a href="products.html" tabindex="0"><i class="fa-solid fa-envelope"></i> Pozivnice</a>
+    <a href="custom.html" tabindex="0"><i class="fa-solid fa-pen-nib"></i> Pravljenje</a>
+    <a href="contact.html" tabindex="0"><i class="fa-solid fa-phone"></i> Kontakt</a>
+    <a href="location.html" tabindex="0"><i class="fa-solid fa-location-dot"></i> Lokacija</a>
+    <a href="about.html"><i class="fa-solid fa-users"></i> O nama</a>
+    <a href="cart.html" tabindex="0"><i class="fa-solid fa-cart-shopping"></i> Korpa</a>
+  </nav>
+  <div id="nav-backdrop"></div>
+</header>
+
+<main>
+    <h1 class="section-title">O nama</h1>
+    <div class="content">
+      <p>
+        Dobrodošli na InviTeens, Vaš pouzdan izvor za unikatne i kreativne pozivnice za sve prilike! Naš tim je posvećen da svaki detalj Vaše proslave učini posebnim i nezaboravnim.
+      </p>
+      <p>
+        Verujemo da svaka pozivnica treba da bude izraz ličnosti i emocija, zato koristimo kvalitetne materijale i pratimo najnovije trendove u dizajnu. Naša misija je da Vaš događaj ostane zauvek u lepom sećanju svim Vašim gostima.
+      </p>
+
+      <h2 class="section-title" style="margin-top: 40px; font-size:1.6rem;">Naš tim</h2>
+      <div class="team">
+        <div class="member">
+          <img src="InviTeens-slike/IMG_20250525_182437.jpg" alt="Milan Pavlović">
+          <h3>Milan Pavlović</h3>
+          <p>Glavni Programer</p>
+        </div>
+        <div class="member">
+          <img src="InviTeens-slike/MVIMG_20250607_152523.jpg" alt="Miona Zolotovskiy">
+          <h3>Miona Zolotovskiy</h3>
+          <p>GLavni Dizajner</p>
+        </div>
+        <!-- Po potrebi dodaj još članova tima -->
+      </div>
+    </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
+  <div class="footer-links">
+    <a href="index.html">Početna</a>|
+    <a href="products.html">Pozivnice</a>|
+    <a href="custom.html">Pravljenje</a>|
+    <a href="contact.html">Kontakt</a>|
+    <a href="location.html">Lokacija</a>|
+    <a href="about.html">O nama</a>
+  </div>
+  <p style="font-size: 0.9rem; color: #bbb;">Prati nas na:
+      <a href="https://facebook.com" target="_blank" rel="noopener" style="color:#2d53a5; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-facebook"></i> Facebook</a> |
+      <a href="https://instagram.com" target="_blank" rel="noopener" style="color:#c4166d; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-instagram"></i> Instagram</a> |
+      <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#1da1f2; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-twitter"></i> Twitter</a> |
+      <a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
+    </p>
+</footer>
+
+<script>
+  // Hamburger meni funkcionalnost
+  const menuToggle = document.getElementById('menu-toggle');
+  const navMenu = document.getElementById('nav-menu');
+  const navBackdrop = document.getElementById('nav-backdrop');
+
+  function openMenu() {
+    menuToggle.classList.add('open');
+    navMenu.classList.add('show');
+    navBackdrop.classList.add('show');
+    setTimeout(() => {
+      const firstLink = navMenu.querySelector('a');
+      if (firstLink) firstLink.focus();
+    }, 200);
+  }
+  function closeMenu() {
+    menuToggle.classList.remove('open');
+    navMenu.classList.remove('show');
+    navBackdrop.classList.remove('show');
+    menuToggle.focus();
+  }
+
+  // Klik na hamburger
+  menuToggle.addEventListener('click', () => {
+    if (navMenu.classList.contains('show')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  // Enter/Space za otvaranje menija (pristupačnost)
+  menuToggle.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (navMenu.classList.contains('show')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }
+  });
+
+  // Zatvori meni na klik linka ili na pozadinu
+  navMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+  navBackdrop.addEventListener('click', closeMenu);
+
+  // ESC za zatvaranje menija
+  document.addEventListener('keydown', e => {
+    if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('show')) {
+      closeMenu();
+    }
+  });
+
+  // Swipe gesture za otvaranje menija (mobilni)
+  let touchStartX = null;
+  document.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) {
+      touchStartX = e.touches[0].clientX;
+    }
+  });
+  document.addEventListener('touchend', function(e) {
+    if (touchStartX !== null && e.changedTouches.length === 1) {
+      let touchEndX = e.changedTouches[0].clientX;
+      // Swipe from right edge (otvori meni)
+      if (touchStartX > window.innerWidth - 40 && touchEndX < touchStartX - 30 && !navMenu.classList.contains('show')) {
+        openMenu();
+      }
+      // Swipe left to close
+      if (navMenu.classList.contains('show') && touchEndX > touchStartX + 30) {
+        closeMenu();
+      }
+    }
+    touchStartX = null;
+  });
+</script>
+</body>
+</html>

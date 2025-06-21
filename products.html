@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pozivnice | InviTeens</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      background-color: #1e1e1e;
+      padding: 20px;
+      position: relative;
+      z-index: 1000;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.6rem;
+      user-select: none;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+    }
+    .logo-pink { color: #ff4081; }
+    .logo-blue { color: #2196f3; }
+    #menu-toggle {
+      position: fixed;
+      top: 22px;
+      right: 22px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+      z-index: 2001;
+      background: none;
+      border: none;
+      padding: 0;
+      height: 40px;
+      width: 40px;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    #menu-toggle.open {
+      background: #1e1e1e;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px #0006;
+    }
+    #menu-toggle:focus {
+      outline: 2px solid #2196f3;
+      outline-offset: 2px;
+    }
+    #menu-toggle span {
+      width: 25px;
+      height: 3px;
+      background: #ff4081;
+      border-radius: 2px;
+      transition: 0.3s;
+      display: block;
+    }
+    #menu-toggle.open span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    #menu-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+    #menu-toggle.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      right: -260px;
+      width: 220px;
+      height: 100vh;
+      background: #1e1e1e;
+      flex-direction: column;
+      padding-top: 80px;
+      gap: 1.2rem;
+      transition: right 0.3s cubic-bezier(.77,0,.18,1);
+      z-index: 1050;
+      box-shadow: -2px 0 10px #0008;
+      display: flex;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    nav.show {
+      right: 0;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    nav a {
+      color: #ff4081;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      transition: color 0.2s, background 0.2s;
+      border-radius: 6px;
+      margin: 0 10px;
+      display: block;
+    }
+    nav a:hover, nav a:focus {
+      color: #fff;
+      background: #2196f3;
+      outline: none;
+    }
+    #nav-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1040;
+      transition: opacity 0.3s;
+    }
+    #nav-backdrop.show {
+      display: block;
+    }
+    @media (max-width: 900px) {
+      nav {
+        width: 80vw;
+        min-width: 160px;
+        max-width: 320px;
+      }
+    }
+    @media (max-width: 600px) {
+      header {
+        padding: 12px;
+      }
+      .logo {
+        font-size: 1.1rem;
+      }
+      nav {
+        padding-top: 60px;
+      }
+      #menu-toggle {
+        top: 12px;
+        right: 12px;
+        height: 36px;
+        width: 36px;
+      }
+    }
+    .products-section {
+      max-width: 1200px;
+      margin: 40px auto 0 auto;
+      padding: 0 20px;
+      flex: 1;
+    }
+    h2 {
+      text-align: center;
+      color: #ff4081;
+      margin-bottom: 30px;
+    }
+    .filter-buttons {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .filter-btn {
+      background: #1e1e1e;
+      border: 1px solid #444;
+      color: #eee;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .filter-btn.active, .filter-btn:focus {
+      background: #2196f3;
+      color: #fff;
+      outline: none;
+    }
+    #product-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+    }
+    .product-card {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      width: 250px;
+      box-shadow: 0 0 10px #333;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: stretch;
+      transition: box-shadow 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .product-card:hover {
+      box-shadow: 0 0 18px #ff4081;
+      transform: translateY(-4px) scale(1.03);
+    }
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 8px #2196f3;
+      transition: box-shadow 0.2s;
+    }
+    .product-card img:hover {
+      box-shadow: 0 0 16px #ff4081;
+    }
+    .btn-buy {
+      background: linear-gradient(90deg,#ff4081,#2196f3);
+      color: white;
+      border: none;
+      padding: 10px;
+      margin-top: auto;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+      font-size: 1.08rem;
+      font-weight: bold;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-buy:hover, .btn-buy:focus {
+      background: linear-gradient(90deg,#2196f3,#ff4081);
+      color: #fff;
+      outline: none;
+    }
+    #cart-counter {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      left: auto;
+      transform: none;
+      background: linear-gradient(90deg,#ff4081,#2196f3);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 50px 16px 50px 16px;
+      font-weight: bold;
+      z-index: 1100;
+      box-shadow: 0 0 10px #2196f3;
+      font-size: 1.12rem;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #cart-counter:hover {
+      background: linear-gradient(90deg,#2196f3,#ff4081);
+      box-shadow: 0 0 18px #ff4081;
+    }
+    @media (max-width: 600px) {
+      #cart-counter {
+        padding: 10px 16px;
+        font-size: 1rem;
+        bottom: 12px;
+        right: 12px;
+      }
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal.show {
+      display: flex;
+    }
+    .modal-content {
+      background: #1e1e1e;
+      padding: 30px 20px 20px 20px;
+      border-radius: 14px;
+      max-width: 400px;
+      text-align: center;
+      width: 95vw;
+      position: relative;
+      box-shadow: 0 0 30px #2196f3;
+      color: #fff;
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      background: none;
+      color: #ff4081;
+      border: none;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 0 18px #2196f3;
+    }
+    .modal-content h3 {
+      color: #ff4081;
+      margin-bottom: 10px;
+    }
+    .modal-content p {
+      color: #eee;
+      margin-bottom: 18px;
+    }
+    .modal-content .btn-buy {
+      margin-top: 10px;
+    }
+    .empty-message {
+      text-align: center;
+      margin: 50px 0;
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: 5rem;
+      background-color: #1e1e1e;
+      padding: 30px 20px;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .footer-links a {
+      white-space: nowrap;
+      margin: 0 2px;
+    }
+    footer a {
+      color: #aaa;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+    #cart-message {
+      display: none;
+      position: fixed;
+      left: 50%;
+      top: 32px;
+      transform: translateX(-50%);
+      background: #2196f3;
+      color: white;
+      padding: 18px 32px;
+      border-radius: 12px;
+      font-weight: bold;
+      z-index: 3000;
+      box-shadow: 0 0 18px #2196f3;
+      font-size: 1.15rem;
+      animation: fadeInOut 2.5s;
+      text-align: center;
+      min-width: 220px;
+      pointer-events: none;
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-20px);}
+      10% { opacity: 1; transform: translateX(-50%) translateY(0);}
+      90% { opacity: 1; transform: translateX(-50%) translateY(0);}
+      100% { opacity: 0; transform: translateX(-50%) translateY(-20px);}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" tabindex="0">
+      <span class="logo-pink">Invi</span><span class="logo-blue">Teens</span>
+    </div>
+    <button id="menu-toggle" aria-label="Otvorite meni" role="button" tabindex="0">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="nav-menu" aria-label="Glavna navigacija">
+    <a href="index.html" tabindex="0"><i class="fa-solid fa-house"></i> Početna</a>
+    <a href="products.html" tabindex="0"><i class="fa-solid fa-envelope"></i> Pozivnice</a>
+    <a href="custom.html" tabindex="0"><i class="fa-solid fa-pen-nib"></i> Pravljenje</a>
+    <a href="contact.html" tabindex="0"><i class="fa-solid fa-phone"></i> Kontakt</a>
+    <a href="location.html" tabindex="0"><i class="fa-solid fa-location-dot"></i> Lokacija</a>
+    <a href="about.html"><i class="fa-solid fa-users"></i> O nama</a>
+    <a href="cart.html" tabindex="0"><i class="fa-solid fa-cart-shopping"></i> Korpa</a>
+  </nav>
+    <div id="nav-backdrop"></div>
+  </header>
+
+  <main class="products-section">
+    <h2>Naša kolekcija pozivnica</h2>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">Sve</button>
+      <button class="filter-btn" data-filter="wedding">Svadbene</button>
+      <button class="filter-btn" data-filter="birthday">Rođendanske</button>
+      <button class="filter-btn" data-filter="custom">Personalizovane</button>
+    </div>
+    <div id="product-list"></div>
+  </main>
+
+  <div id="cart-counter" onclick="window.location.href='cart.html'">Korpa: 0</div>
+
+  <div id="product-modal" class="modal" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Zatvori">&times;</button>
+      <h3 id="modal-title"></h3>
+      <img src="" id="modal-img" alt="" />
+      <p id="modal-desc"></p>
+      <button class="btn-buy" id="modal-buy-btn">Dodaj u korpu</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
+    <div class="footer-links">
+      <a href="index.html">Početna</a>|
+      <a href="products.html">Pozivnice</a>|
+      <a href="custom.html">Pravljenje</a>|
+      <a href="contact.html">Kontakt</a>|
+      <a href="location.html">Lokacija</a>|
+      <a href="about.html">O nama</a>
+    </div>
+    <p style="font-size: 0.9rem; color: #bbb;">Prati nas na:
+      <a href="https://facebook.com" target="_blank" rel="noopener" style="color:#2d53a5; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-facebook"></i> Facebook</a> |
+      <a href="https://instagram.com" target="_blank" rel="noopener" style="color:#c4166d; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-instagram"></i> Instagram</a> |
+      <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#1da1f2; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-twitter"></i> Twitter</a> |
+      <a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
+    </p>
+  </footer>
+  <!-- Prikladniji zvuk za dodavanje u korpu (stari zvuk) -->
+  <audio id="cart-sound" src="InviTeens-slike/slow-wind-sound-effect-108401.mp3" preload="auto"></audio>
+  <audio id="cart-error-sound" src="InviTeens-slike/sample_deny_error04_kofi_by_miraclei-360158.mp3" preload="auto"></audio>
+  <div id="cart-message">Proizvod dodat u korpu!</div>
+
+  <script>
+    // Hamburger meni funkcionalnost
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    const navBackdrop = document.getElementById('nav-backdrop');
+
+    function openMenu() {
+      menuToggle.classList.add('open');
+      navMenu.classList.add('show');
+      navBackdrop.classList.add('show');
+      setTimeout(() => {
+        const firstLink = navMenu.querySelector('a');
+        if (firstLink) firstLink.focus();
+      }, 200);
+    }
+    function closeMenu() {
+      menuToggle.classList.remove('open');
+      navMenu.classList.remove('show');
+      navBackdrop.classList.remove('show');
+      menuToggle.focus();
+    }
+
+    menuToggle.addEventListener('click', () => {
+      if (navMenu.classList.contains('show')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    menuToggle.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (navMenu.classList.contains('show')) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      }
+    });
+
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+    navBackdrop.addEventListener('click', closeMenu);
+
+    document.addEventListener('keydown', e => {
+      if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('show')) {
+        closeMenu();
+      }
+    });
+
+    let touchStartX = null;
+    document.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+      }
+    });
+    document.addEventListener('touchend', function(e) {
+      if (touchStartX !== null && e.changedTouches.length === 1) {
+        let touchEndX = e.changedTouches[0].clientX;
+        if (touchStartX > window.innerWidth - 40 && touchEndX < touchStartX - 30 && !navMenu.classList.contains('show')) {
+          openMenu();
+        }
+        if (navMenu.classList.contains('show') && touchEndX > touchStartX + 30) {
+          closeMenu();
+        }
+      }
+      touchStartX = null;
+    });
+
+    // --- Proizvodi i korpa ---
+    const products = [
+      // 5 Svadbenih
+      { id: 1, name: "Svadbena 1", category: "wedding", price: "350 RSD", img: "InviTeens-slike/pozivnica1.jpg", desc: "Opis svadbene pozivnice 1." },
+      { id: 2, name: "Svadbena 2", category: "wedding", price: "360 RSD", img: "InviTeens-slike/pozivnica2.jpg", desc: "Opis svadbene pozivnice 2." },
+      { id: 3, name: "Svadbena 3", category: "wedding", price: "370 RSD", img: "InviTeens-slike/pozivnica3.jpg", desc: "Opis svadbene pozivnice 3." },
+      { id: 4, name: "Svadbena 4", category: "wedding", price: "380 RSD", img: "InviTeens-slike/pozivnica4.jpg", desc: "Opis svadbene pozivnice 4." },
+      { id: 5, name: "Svadbena 5", category: "wedding", price: "390 RSD", img: "InviTeens-slike/pozivnica5.jpg", desc: "Opis svadbene pozivnice 5." },
+
+      // 5 Rođendanskih
+      { id: 6, name: "Rođendanska 1", category: "birthday", price: "250 RSD", img: "InviTeens-slike/pozivnica1.jpg", desc: "Opis rođendanske pozivnice 1." },
+      { id: 7, name: "Rođendanska 2", category: "birthday", price: "260 RSD", img: "InviTeens-slike/pozivnica2.jpg", desc: "Opis rođendanske pozivnice 2." },
+      { id: 8, name: "Rođendanska 3", category: "birthday", price: "270 RSD", img: "InviTeens-slike/pozivnica3.jpg", desc: "Opis rođendanske pozivnice 3." },
+      { id: 9, name: "Rođendanska 4", category: "birthday", price: "280 RSD", img: "InviTeens-slike/pozivnica4.jpg", desc: "Opis rođendanske pozivnice 4." },
+      { id: 10, name: "Rođendanska 5", category: "birthday", price: "290 RSD", img: "InviTeens-slike/pozivnica5.jpg", desc: "Opis rođendanske pozivnice 5." },
+
+      // 5 Personalizovanih
+      { id: 11, name: "Personalizovana 1", category: "custom", price: "450 RSD", img: "InviTeens-slike/pozivnica1.jpg", desc: "Opis personalizovane pozivnice 1." },
+      { id: 12, name: "Personalizovana 2", category: "custom", price: "460 RSD", img: "InviTeens-slike/pozivnica2.jpg", desc: "Opis personalizovane pozivnice 2." },
+      { id: 13, name: "Personalizovana 3", category: "custom", price: "470 RSD", img: "InviTeens-slike/pozivnica3.jpg", desc: "Opis personalizovane pozivnice 3." },
+      { id: 14, name: "Personalizovana 4", category: "custom", price: "480 RSD", img: "InviTeens-slike/pozivnica4.jpg", desc: "Opis personalizovane pozivnice 4." },
+      { id: 15, name: "Personalizovana 5", category: "custom", price: "490 RSD", img: "InviTeens-slike/pozivnica5.jpg", desc: "Opis personalizovane pozivnice 5." }
+    ];
+
+    const productList = document.getElementById("product-list");
+    const modal = document.getElementById("product-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalImg = document.getElementById("modal-img");
+    const modalDesc = document.getElementById("modal-desc");
+    const modalBuyBtn = document.getElementById("modal-buy-btn");
+    const modalCloseBtn = modal.querySelector(".modal-close");
+    const cartCounter = document.getElementById("cart-counter");
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let currentProductId = null;
+
+    function renderProducts(filter = "all") {
+      productList.innerHTML = "";
+      const filtered = filter === "all" ? products : products.filter(p => p.category === filter);
+      if (filtered.length === 0) {
+        productList.innerHTML = `<div class="empty-message">Nema proizvoda za izabranu kategoriju.</div>`;
+        return;
+      }
+      filtered.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "product-card";
+        div.innerHTML = `
+          <img src="${p.img}" alt="${p.name}" tabindex="0" />
+          <h3>${p.name}</h3>
+          <p>${p.price}</p>
+          <button class="btn-buy" data-id="${p.id}">Dodaj u korpu</button>
+        `;
+        // Klik na sliku otvara modal
+        div.querySelector("img").addEventListener("click", e => {
+          e.stopPropagation();
+          openModal(p.id);
+        });
+        div.querySelector("img").addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openModal(p.id);
+          }
+        });
+        // Klik na karticu (osim dugmeta) otvara modal
+        div.addEventListener("click", e => {
+          if (e.target.classList.contains("btn-buy")) return;
+          openModal(p.id);
+        });
+        productList.appendChild(div);
+      });
+    }
+
+    function openModal(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+      currentProductId = id;
+      modalTitle.textContent = product.name;
+      modalImg.src = product.img;
+      modalImg.alt = product.name;
+      modalDesc.textContent = product.desc;
+      modal.classList.add("show");
+      modalBuyBtn.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove("show");
+      currentProductId = null;
+    }
+
+    modalCloseBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", e => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && modal.classList.contains("show")) {
+        closeModal();
+      }
+    });
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderProducts(btn.dataset.filter);
+      });
+    });
+
+    function updateCartCounter() {
+      cartCounter.textContent = `Korpa: ${cart.length}`;
+    }
+
+    function showCartMessage(msg = "Proizvod dodat u korpu!", isError = false) {
+      const cartMessage = document.getElementById("cart-message");
+      cartMessage.textContent = msg;
+      cartMessage.style.background = isError ? "#e53935" : "#2196f3";
+      cartMessage.style.display = "block";
+      cartMessage.style.animation = "none";
+      // Restart animation
+      void cartMessage.offsetWidth;
+      cartMessage.style.animation = null;
+      clearTimeout(cartMessage.hideTimeout);
+      cartMessage.hideTimeout = setTimeout(() => {
+        cartMessage.style.display = "none";
+      }, 2500);
+    }
+
+    // Najpouzdanije: svaki put novi Audio objekat
+    function playCartSound() {
+      try {
+        const src = document.getElementById("cart-sound").src;
+        const audio = new Audio(src);
+        audio.volume = 0.7;
+        audio.play().catch(()=>{});
+      } catch (e) {
+        // Ako nešto pođe po zlu, ignoriši
+      }
+    }
+
+    function playCartErrorSound() {
+      try {
+        const src = document.getElementById("cart-error-sound").src;
+        const audio = new Audio(src);
+        audio.volume = 0.7;
+        audio.play().catch(()=>{});
+      } catch (e) {}
+    }
+
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+      if (cart.some(p => p.id === id)) {
+        playCartErrorSound(); // koristi drugi zvuk
+        showCartMessage("Proizvod je već u korpi!", true);
+        return;
+      }
+      cart.push(product);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCounter();
+      playCartSound();
+      showCartMessage();
+    }
+
+    document.addEventListener("click", e => {
+      if (e.target.classList.contains("btn-buy")) {
+        const id = parseInt(e.target.dataset.id);
+        addToCart(id);
+      }
+    });
+
+    modalBuyBtn.addEventListener("click", () => {
+      if (currentProductId !== null) {
+        addToCart(currentProductId);
+      }
+    });
+
+    renderProducts();
+    updateCartCounter();
+  </script>
+</body>
+</html>

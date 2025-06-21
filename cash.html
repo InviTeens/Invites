@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gotovinsko plaćanje | InviTeens</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css" />
+  <style>
+    :root {
+      --accent-pink: #ff4081;
+      --accent-blue: #2196f3;
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --text-light: #eee;
+      --error: #e53935;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header, footer {
+      background: var(--bg-card);
+      padding: 14px 0;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.7);
+    }
+    header h2 {
+      font-size: 1.8rem;
+      color: #ff4081;
+      letter-spacing: 2px;
+    }
+    header .logo-blue { color: #2196f3; }
+    main {
+      flex: 1;
+      padding: 4px 0 4px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .box {
+      max-width: 480px;
+      width: 100%;
+      background: var(--bg-card);
+      border-radius: 18px;
+      padding: 38px 32px 28px 32px;
+      box-shadow: 0 0 18px rgba(33,150,243,0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .box h1 {
+      color: var(--accent-pink);
+      margin-bottom: 18px;
+      font-size: 1.35rem;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .box form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .box label {
+      display: block;
+      margin: 0 0 4px 2px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #bbb;
+      text-align: left;
+    }
+    .box input, .box textarea {
+      width: 100%;
+      padding: 13px;
+      border-radius: 7px;
+      border: 1.5px solid #222;
+      background: #232323;
+      color: #fff;
+      font-size: 1.08rem;
+      margin-bottom: 0;
+      transition: box-shadow 0.3s, border 0.3s;
+      outline: none;
+    }
+    .box input:focus, .box textarea:focus {
+      border: 1.5px solid var(--accent-pink);
+      box-shadow: 0 0 5px 2px var(--accent-pink);
+    }
+    .box input.error, .box textarea.error {
+      border: 1.5px solid var(--error);
+      background: #2a181a;
+    }
+    .error-message {
+      color: var(--error);
+      font-size: 0.97rem;
+      margin: 1px 0 0 2px;
+      min-height: 16px;
+      text-align: left;
+    }
+    .box textarea { resize: vertical; min-height: 70px; }
+    .box .note {
+      font-size: 0.95rem;
+      color: #bbb;
+      margin-top: -0.5rem;
+      margin-bottom: 0;
+      text-align: left;
+    }
+    .box button {
+      margin-top: 14px;
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
+      color: #fff;
+      font-size: 1.09rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .3s, transform .2s;
+      box-shadow: 0 2px 8px #0003;
+    }
+    .box button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-pink));
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 0.97rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: var(--accent-pink);
+    }
+    footer p {
+      font-size: 0.9rem;
+      color: #777;
+    }
+    /* intl-tel-input custom width */
+    .iti {
+      width: 100%;
+      border-radius: 7px;
+      background-color: #232323 !important;
+      margin-bottom: 0;
+    }
+    .iti__flag-container,
+    .iti__selected-flag {
+      background-color: #232323 !important;
+    }
+    .iti input[type="tel"] {
+      background-color: #232323 !important;
+      color: #eee !important;
+      border: none !important;
+      padding-left: 100px !important;
+    }
+    .iti input[type="tel"]:focus {
+      background-color: #232323 !important;
+      color: #eee !important;
+      outline: none !important;
+      box-shadow: 0 0 5px 1px #2196f3;
+    }
+    .iti__country-list {
+      background-color: #1e1e1e !important;
+      color: #eee !important;
+    }
+    .iti__country:hover {
+      background-color: #2196f3 !important;
+      color: white !important;
+    }
+    @media (max-width: 600px) {
+      header, footer { padding: 10px; }
+      main { padding: 2px 2vw 2px 2vw; }
+      .box { padding: 10px 2vw 10px 2vw; max-width: 98vw; }
+      .box h1 { font-size: 1.05rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Invi<span class="logo-blue">Teens</span></h2>
+  </header>
+
+  <main>
+    <div class="box">
+      <h1>Plaćanje pouzećem</h1>
+      <form id="cashForm" novalidate autocomplete="off">
+        <label for="fullName">Ime i prezime</label>
+        <input type="text" id="fullName" name="fullName" placeholder="Milan Pavlović" required>
+        <div class="error-message" id="nameError"></div>
+
+        <label for="phone">Broj telefona</label>
+        <input type="tel" id="phone" name="phone" placeholder="Unesite broj telefona" required>
+        <div class="error-message" id="phoneError"></div>
+
+        <p class="note">Naš kurir će Vas pozvati 30 min pre dolaska.</p>
+
+        <label for="address">Adresa dostave</label>
+        <input type="text" id="address" name="address" placeholder="Unesite adresu..." required>
+        <div class="error-message" id="addressError"></div>
+
+        <label for="notes">Dodatne napomene</label>
+        <textarea id="notes" name="notes" placeholder="npr. Pozvoni zvono"></textarea>
+        <div class="error-message" id="notesError"></div>
+
+        <button type="submit">Potvrdi porudžbinu</button>
+      </form>
+
+      <a href="cart.html" class="back-link">← Nazad na korpu</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"></script>
+  <script>
+  const phoneInput = document.querySelector("#phone");
+  const iti = intlTelInput(phoneInput, {
+    initialCountry: "rs",
+    separateDialCode: true,
+    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+  });
+
+  // Automatsko prebacivanje fokusa
+  document.getElementById('fullName').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim().length > 2) {
+      e.preventDefault();
+      phoneInput.focus();
+    }
+  });
+  phoneInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && iti.isValidNumber()) {
+      e.preventDefault();
+      document.getElementById('address').focus();
+    }
+  });
+  document.getElementById('address').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim().length > 2) {
+      e.preventDefault();
+      document.getElementById('notes').focus();
+    }
+  });
+
+  // Validacija i prikaz grešaka
+  const form = document.getElementById("cashForm");
+  const nameError = document.getElementById("nameError");
+  const phoneError = document.getElementById("phoneError");
+  const addressError = document.getElementById("addressError");
+  const notesError = document.getElementById("notesError");
+
+  // Funkcija za automatsko uklanjanje poruka i crvene klase
+  function clearErrorAfter(el, input) {
+    setTimeout(() => {
+      el.textContent = "";
+      if (input) input.classList.remove('error');
+    }, 3000);
+  }
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+
+    // Reset grešaka
+    [nameError, phoneError, addressError, notesError].forEach(el => el.textContent = "");
+    ['fullName', 'phone', 'address', 'notes'].forEach(id => {
+      document.getElementById(id).classList.remove('error');
+    });
+
+    let valid = true;
+
+    // Ime i prezime
+    const fullName = form.fullName.value.trim();
+    if (fullName.length < 4) {
+      nameError.textContent = "Unesite puno ime i prezime (min 4 slova).";
+      form.fullName.classList.add('error');
+      clearErrorAfter(nameError, form.fullName);
+      valid = false;
+    }
+
+    // Telefon
+    if (!iti.isValidNumber()) {
+      phoneError.textContent = "Unesite validan broj telefona.";
+      phoneInput.classList.add('error');
+      clearErrorAfter(phoneError, phoneInput);
+      valid = false;
+    }
+
+    // Adresa
+    const address = form.address.value.trim();
+    if (address.length < 5) {
+      addressError.textContent = "Unesite adresu dostave (min 5 karaktera).";
+      form.address.classList.add('error');
+      clearErrorAfter(addressError, form.address);
+      valid = false;
+    }
+
+    // Napomene nisu obavezne
+
+    if (!valid) return;
+
+    // Uspeh
+    window.location.href = "purchase.html";
+  });
+  </script>
+</body>
+</html>
