@@ -6,42 +6,68 @@
   <title>Pozivnice | InviTeens</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <style>
+    :root {
+      --accent-pink: #ff4081;
+      --accent-blue: #2196f3;
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --text-light: #eee;
+      --text-muted: #bbb;
+    }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #121212;
-      color: #eee;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
     header {
+      background-color: var(--bg-card);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
       display: flex;
       align-items: center;
-      background-color: #1e1e1e;
-      padding: 20px;
-      position: relative;
-      z-index: 1000;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 999;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.7);
     }
     .logo {
       font-weight: 700;
       font-size: 1.6rem;
+      color: var(--accent-pink);
       user-select: none;
       letter-spacing: 2px;
       display: flex;
       align-items: center;
     }
-    .logo-pink { color: #ff4081; }
-    .logo-blue { color: #2196f3; }
-    #menu-toggle {
-      position: fixed;
-      top: 22px;
-      right: 22px;
+    .logo-pink { color: var(--accent-pink); }
+    .logo-blue { color: var(--accent-blue); }
+    nav {
       display: flex;
+      gap: 1.5rem;
+    }
+    nav a {
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: var(--accent-pink);
+      text-decoration: none;
+      transition: color 0.2s, background 0.2s;
+    }
+    nav a:hover, nav a:focus {
+      background-color: var(--accent-blue);
+      color: #fff;
+      outline: none;
+    }
+    #menu-toggle {
+      display: none;
       flex-direction: column;
       cursor: pointer;
       gap: 5px;
-      z-index: 2001;
       background: none;
       border: none;
       padding: 0;
@@ -49,21 +75,16 @@
       width: 40px;
       align-items: center;
       justify-content: center;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      z-index: 2001;
       transition: background 0.2s;
-    }
-    #menu-toggle.open {
-      background: #1e1e1e;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px #0006;
-    }
-    #menu-toggle:focus {
-      outline: 2px solid #2196f3;
-      outline-offset: 2px;
     }
     #menu-toggle span {
       width: 25px;
       height: 3px;
-      background: #ff4081;
+      background: var(--accent-pink);
       border-radius: 2px;
       transition: 0.3s;
       display: block;
@@ -77,68 +98,73 @@
     #menu-toggle.open span:nth-child(3) {
       transform: rotate(-45deg) translate(5px, -5px);
     }
-    nav {
-      position: fixed;
-      top: 0;
-      right: -260px;
-      width: 220px;
-      height: 100vh;
-      background: #1e1e1e;
-      flex-direction: column;
-      padding-top: 80px;
-      gap: 1.2rem;
-      transition: right 0.3s cubic-bezier(.77,0,.18,1);
-      z-index: 1050;
-      box-shadow: -2px 0 10px #0008;
-      display: flex;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    nav.show {
-      right: 0;
-      visibility: visible;
-      pointer-events: auto;
-    }
-    nav a {
-      color: #ff4081;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 12px 24px;
-      font-size: 1.1rem;
-      transition: color 0.2s, background 0.2s;
-      border-radius: 6px;
-      margin: 0 10px;
-      display: block;
-    }
-    nav a:hover, nav a:focus {
-      color: #fff;
-      background: #2196f3;
-      outline: none;
-    }
-    #nav-backdrop {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 1040;
-      transition: opacity 0.3s;
-    }
-    #nav-backdrop.show {
-      display: block;
-    }
     @media (max-width: 900px) {
       nav {
+        position: fixed;
+        top: 60px;
+        right: -100%;
         width: 80vw;
         min-width: 160px;
         max-width: 320px;
+        height: calc(100vh - 60px);
+        background: var(--bg-card);
+        flex-direction: column;
+        padding-top: 1rem;
+        gap: 1rem;
+        transition: right 0.3s cubic-bezier(.4,2,.6,1);
+        z-index: 2002;
+        overflow-y: auto;
+        box-shadow: -2px 0 16px rgba(0,0,0,0.5);
+        border-top-left-radius: 18px;
+        border-bottom-left-radius: 18px;
+      }
+      nav.show {
+        right: 0;
+      }
+      nav a {
+        font-size: 1.2rem;
+        padding: 16px 24px;
+        border-radius: 8px;
+        margin: 0 12px;
+        text-align: left;
+        background: none;
+        color: var(--accent-pink);
+        transition: background 0.2s, color 0.2s;
+      }
+      nav a:hover, nav a:focus {
+        background: var(--accent-blue);
+        color: #fff;
+      }
+      #menu-toggle {
+        display: flex;
+      }
+      #nav-backdrop {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.65);
+        z-index: 2001;
+        transition: opacity 0.3s;
+      }
+      #nav-backdrop.show {
+        display: block;
       }
     }
     @media (max-width: 600px) {
       header {
         padding: 12px;
+        height: 52px;
+        min-height: 52px;
+        max-height: 52px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
       }
       .logo {
         font-size: 1.1rem;
+        height: 28px;
+        display: flex;
+        align-items: center;
       }
       nav {
         padding-top: 60px;
@@ -149,26 +175,56 @@
         height: 36px;
         width: 36px;
       }
+      #cart-counter {
+        padding: 10px 16px;
+        font-size: 1rem;
+        bottom: 12px;
+        right: 12px;
+      }
+      main.products-section {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+      h2 {
+        font-size: 2rem !important;
+        margin-top: 18px !important;
+        margin-bottom: 18px !important;
+        gap: 6px !important;
+      }
     }
-    .products-section {
-      max-width: 1200px;
-      margin: 40px auto 0 auto;
-      padding: 0 20px;
+    main.products-section {
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 60px;         /* isto kao contact.html */
+      padding-bottom: 40px;     /* isto kao contact.html */
+      padding-left: 20px;
+      padding-right: 20px;
       flex: 1;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
     }
     h2 {
       text-align: center;
-      color: #ff4081;
-      margin-bottom: 30px;
+      color: var(--accent-pink);
+      margin-bottom: 40px;
+      margin-top: 40px;         /* isto kao contact.html */
+      font-size: 2rem;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
     .filter-buttons {
       text-align: center;
       margin-bottom: 30px;
     }
     .filter-btn {
-      background: #1e1e1e;
+      background: var(--bg-card);
       border: 1px solid #444;
-      color: #eee;
+      color: var(--text-light);
       padding: 10px 20px;
       margin: 5px;
       cursor: pointer;
@@ -177,7 +233,7 @@
       transition: background 0.2s, color 0.2s;
     }
     .filter-btn.active, .filter-btn:focus {
-      background: #2196f3;
+      background: var(--accent-blue);
       color: #fff;
       outline: none;
     }
@@ -188,7 +244,7 @@
       gap: 24px;
     }
     .product-card {
-      background: #1e1e1e;
+      background: var(--bg-card);
       border-radius: 10px;
       padding: 20px;
       width: 250px;
@@ -201,7 +257,7 @@
       position: relative;
     }
     .product-card:hover {
-      box-shadow: 0 0 18px #ff4081;
+      box-shadow: 0 0 18px var(--accent-pink);
       transform: translateY(-4px) scale(1.03);
     }
     .product-card img {
@@ -211,14 +267,14 @@
       border-radius: 8px;
       margin-bottom: 10px;
       cursor: pointer;
-      box-shadow: 0 0 8px #2196f3;
+      box-shadow: 0 0 8px var(--accent-blue);
       transition: box-shadow 0.2s;
     }
     .product-card img:hover {
-      box-shadow: 0 0 16px #ff4081;
+      box-shadow: 0 0 16px var(--accent-pink);
     }
     .btn-buy {
-      background: linear-gradient(90deg,#ff4081,#2196f3);
+      background: linear-gradient(90deg,var(--accent-pink),var(--accent-blue));
       color: white;
       border: none;
       padding: 10px;
@@ -231,7 +287,7 @@
       transition: background 0.2s, color 0.2s;
     }
     .btn-buy:hover, .btn-buy:focus {
-      background: linear-gradient(90deg,#2196f3,#ff4081);
+      background: linear-gradient(90deg,var(--accent-blue),var(--accent-pink));
       color: #fff;
       outline: none;
     }
@@ -241,13 +297,13 @@
       right: 24px;
       left: auto;
       transform: none;
-      background: linear-gradient(90deg,#ff4081,#2196f3);
+      background: linear-gradient(90deg,var(--accent-pink),var(--accent-blue));
       color: white;
       padding: 14px 28px;
       border-radius: 50px 16px 50px 16px;
       font-weight: bold;
       z-index: 1100;
-      box-shadow: 0 0 10px #2196f3;
+      box-shadow: 0 0 10px var(--accent-blue);
       font-size: 1.12rem;
       cursor: pointer;
       transition: background 0.2s, box-shadow 0.2s;
@@ -256,15 +312,49 @@
       gap: 8px;
     }
     #cart-counter:hover {
-      background: linear-gradient(90deg,#2196f3,#ff4081);
-      box-shadow: 0 0 18px #ff4081;
+      background: linear-gradient(90deg,var(--accent-blue),var(--accent-pink));
+      box-shadow: 0 0 18px var(--accent-pink);
     }
     @media (max-width: 600px) {
+      header {
+        padding: 12px;
+        height: 52px;
+        min-height: 52px;
+        max-height: 52px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+      }
+      .logo {
+        font-size: 1.1rem;
+        height: 28px;
+        display: flex;
+        align-items: center;
+      }
+      nav {
+        padding-top: 60px;
+      }
+      #menu-toggle {
+        top: 12px;
+        right: 12px;
+        height: 36px;
+        width: 36px;
+      }
       #cart-counter {
         padding: 10px 16px;
         font-size: 1rem;
         bottom: 12px;
         right: 12px;
+      }
+      main.products-section {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+      h2 {
+        font-size: 2rem !important;
+        margin-top: 18px !important;
+        margin-bottom: 18px !important;
+        gap: 6px !important;
       }
     }
     .modal {
@@ -280,14 +370,14 @@
       display: flex;
     }
     .modal-content {
-      background: #1e1e1e;
+      background: var(--bg-card);
       padding: 30px 20px 20px 20px;
       border-radius: 14px;
       max-width: 400px;
       text-align: center;
       width: 95vw;
       position: relative;
-      box-shadow: 0 0 30px #2196f3;
+      box-shadow: 0 0 30px var(--accent-blue);
       color: #fff;
     }
     .modal-close {
@@ -296,7 +386,7 @@
       right: 30px;
       font-size: 2rem;
       background: none;
-      color: #ff4081;
+      color: var(--accent-pink);
       border: none;
       cursor: pointer;
       z-index: 2;
@@ -308,10 +398,10 @@
       object-fit: contain;
       border-radius: 8px;
       margin-bottom: 10px;
-      box-shadow: 0 0 18px #2196f3;
+      box-shadow: 0 0 18px var(--accent-blue);
     }
     .modal-content h3 {
-      color: #ff4081;
+      color: var(--accent-pink);
       margin-bottom: 10px;
     }
     .modal-content p {
@@ -331,9 +421,14 @@
       text-align: center;
       font-size: 0.9rem;
       color: #aaa;
-      margin-top: 5rem;
-      background-color: #1e1e1e;
-      padding: 30px 20px;
+      background-color: var(--bg-card);
+      padding: 18px 20px 14px 20px; /* isto kao contact.html */
+      width: 100vw;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      flex-shrink: 0;
+      margin: 0;
+      /* Nema position: fixed */
     }
     .footer-links {
       display: flex;
@@ -345,6 +440,12 @@
     .footer-links a {
       white-space: nowrap;
       margin: 0 2px;
+      color: #aaa;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer-links a:hover {
+      color: var(--accent-pink);
     }
     footer a {
       color: #aaa;
@@ -359,13 +460,13 @@
       left: 50%;
       top: 32px;
       transform: translateX(-50%);
-      background: #2196f3;
+      background: var(--accent-blue);
       color: white;
       padding: 18px 32px;
       border-radius: 12px;
       font-weight: bold;
       z-index: 3000;
-      box-shadow: 0 0 18px #2196f3;
+      box-shadow: 0 0 18px var(--accent-blue);
       font-size: 1.15rem;
       animation: fadeInOut 2.5s;
       text-align: center;
@@ -378,6 +479,17 @@
       90% { opacity: 1; transform: translateX(-50%) translateY(0);}
       100% { opacity: 0; transform: translateX(-50%) translateY(-20px);}
     }
+    #nav-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1040;
+      transition: opacity 0.3s;
+    }
+    #nav-backdrop.show {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -389,19 +501,19 @@
       <span></span><span></span><span></span>
     </button>
     <nav id="nav-menu" aria-label="Glavna navigacija">
-    <a href="index.html" tabindex="0"><i class="fa-solid fa-house"></i> Početna</a>
-    <a href="products.html" tabindex="0"><i class="fa-solid fa-envelope"></i> Pozivnice</a>
-    <a href="custom.html" tabindex="0"><i class="fa-solid fa-pen-nib"></i> Pravljenje</a>
-    <a href="contact.html" tabindex="0"><i class="fa-solid fa-phone"></i> Kontakt</a>
-    <a href="location.html" tabindex="0"><i class="fa-solid fa-location-dot"></i> Lokacija</a>
-    <a href="about.html"><i class="fa-solid fa-users"></i> O nama</a>
-    <a href="cart.html" tabindex="0"><i class="fa-solid fa-cart-shopping"></i> Korpa</a>
-  </nav>
+      <a href="index.html" tabindex="0"><i class="fa-solid fa-house"></i> Početna</a>
+      <a href="products.html" tabindex="0"><i class="fa-solid fa-envelope"></i> Pozivnice</a>
+      <a href="custom.html" tabindex="0"><i class="fa-solid fa-pen-nib"></i> Pravljenje</a>
+      <a href="contact.html" tabindex="0"><i class="fa-solid fa-phone"></i> Kontakt</a>
+      <a href="location.html" tabindex="0"><i class="fa-solid fa-location-dot"></i> Lokacija</a>
+      <a href="about.html"><i class="fa-solid fa-users"></i> O nama</a>
+      <a href="cart.html" tabindex="0"><i class="fa-solid fa-cart-shopping"></i> Korpa</a>
+    </nav>
     <div id="nav-backdrop"></div>
   </header>
 
   <main class="products-section">
-    <h2>Naša kolekcija pozivnica</h2>
+    <h2><i class="fa-solid fa-warehouse"></i>Naša kolekcija pozivnica</h2>
     <div class="filter-buttons">
       <button class="filter-btn active" data-filter="all">Sve</button>
       <button class="filter-btn" data-filter="wedding">Svadbene</button>
@@ -426,11 +538,11 @@
   <footer>
     <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
     <div class="footer-links">
-      <a href="index.html">Početna</a>|
-      <a href="products.html">Pozivnice</a>|
-      <a href="custom.html">Pravljenje</a>|
-      <a href="contact.html">Kontakt</a>|
-      <a href="location.html">Lokacija</a>|
+      <a href="index.html">Početna</a> |
+      <a href="products.html">Pozivnice</a> |
+      <a href="custom.html">Pravljenje</a> |
+      <a href="contact.html">Kontakt</a> |
+      <a href="location.html">Lokacija</a> |
       <a href="about.html">O nama</a>
     </div>
     <p style="font-size: 0.9rem; color: #bbb;">Prati nas na:
@@ -440,13 +552,12 @@
       <a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
     </p>
   </footer>
-  <!-- Prikladniji zvuk za dodavanje u korpu (stari zvuk) -->
   <audio id="cart-sound" src="InviTeens-slike/slow-wind-sound-effect-108401.mp3" preload="auto"></audio>
   <audio id="cart-error-sound" src="InviTeens-slike/sample_deny_error04_kofi_by_miraclei-360158.mp3" preload="auto"></audio>
   <div id="cart-message">Proizvod dodat u korpu!</div>
 
   <script>
-    // Hamburger meni funkcionalnost
+    // Hamburger meni funkcionalnost kao na cart.html
     const menuToggle = document.getElementById('menu-toggle');
     const navMenu = document.getElementById('nav-menu');
     const navBackdrop = document.getElementById('nav-backdrop');
@@ -455,6 +566,7 @@
       menuToggle.classList.add('open');
       navMenu.classList.add('show');
       navBackdrop.classList.add('show');
+      document.body.style.overflow = 'hidden';
       setTimeout(() => {
         const firstLink = navMenu.querySelector('a');
         if (firstLink) firstLink.focus();
@@ -464,9 +576,9 @@
       menuToggle.classList.remove('open');
       navMenu.classList.remove('show');
       navBackdrop.classList.remove('show');
+      document.body.style.overflow = '';
       menuToggle.focus();
     }
-
     menuToggle.addEventListener('click', () => {
       if (navMenu.classList.contains('show')) {
         closeMenu();
@@ -474,7 +586,6 @@
         openMenu();
       }
     });
-
     menuToggle.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -485,18 +596,17 @@
         }
       }
     });
-
     navMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', closeMenu);
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) closeMenu();
+      });
     });
     navBackdrop.addEventListener('click', closeMenu);
-
     document.addEventListener('keydown', e => {
       if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('show')) {
         closeMenu();
       }
     });
-
     let touchStartX = null;
     document.addEventListener('touchstart', function(e) {
       if (e.touches.length === 1) {
@@ -629,7 +739,7 @@
     function showCartMessage(msg = "Proizvod dodat u korpu!", isError = false) {
       const cartMessage = document.getElementById("cart-message");
       cartMessage.textContent = msg;
-      cartMessage.style.background = isError ? "#e53935" : "#2196f3";
+      cartMessage.style.background = isError ? "#e53935" : "var(--accent-blue)";
       cartMessage.style.display = "block";
       cartMessage.style.animation = "none";
       // Restart animation
@@ -641,16 +751,13 @@
       }, 2500);
     }
 
-    // Najpouzdanije: svaki put novi Audio objekat
     function playCartSound() {
       try {
         const src = document.getElementById("cart-sound").src;
         const audio = new Audio(src);
         audio.volume = 0.7;
         audio.play().catch(()=>{});
-      } catch (e) {
-        // Ako nešto pođe po zlu, ignoriši
-      }
+      } catch (e) {}
     }
 
     function playCartErrorSound() {
@@ -666,7 +773,7 @@
       const product = products.find(p => p.id === id);
       if (!product) return;
       if (cart.some(p => p.id === id)) {
-        playCartErrorSound(); // koristi drugi zvuk
+        playCartErrorSound();
         showCartMessage("Proizvod je već u korpi!", true);
         return;
       }
@@ -693,5 +800,46 @@
     renderProducts();
     updateCartCounter();
   </script>
+  <script>
+// filepath: c:\Users\Win 11\OneDrive\Desktop\Veb Dizajn InviTeens\products.html
+(function() {
+  const cartCounter = document.getElementById('cart-counter');
+  const footer = document.querySelector('footer');
+
+  function updateCartCounterPosition() {
+    // Razmak od dna ekrana
+    const fixedBottom = window.innerWidth <= 600 ? 12 : 24;
+    // Visina korpe
+    const cartHeight = cartCounter.offsetHeight;
+    // Visina footera
+    const footerHeight = footer.offsetHeight;
+
+    // Gornja ivica footera u odnosu na vrh dokumenta
+    const footerTop = footer.getBoundingClientRect().top + window.scrollY;
+    // Donja ivica prozora + razmak za korpu
+    const windowBottom = window.scrollY + window.innerHeight - fixedBottom;
+
+    // Ako bi korpa upala u footer, prebaci je iznad footera (absolute)
+    if (windowBottom > footerTop - 8) {
+      cartCounter.style.position = 'absolute';
+      cartCounter.style.right = window.innerWidth <= 600 ? '12px' : '24px';
+      cartCounter.style.left = 'auto';
+      cartCounter.style.bottom = 'auto';
+      cartCounter.style.top = (footerTop - cartHeight - 18) + 'px'; // 18px razmak iznad footera
+    } else {
+      // Inače prati skrol (fixed)
+      cartCounter.style.position = 'fixed';
+      cartCounter.style.right = window.innerWidth <= 600 ? '12px' : '24px';
+      cartCounter.style.left = 'auto';
+      cartCounter.style.bottom = fixedBottom + 'px';
+      cartCounter.style.top = 'auto';
+    }
+  }
+
+  window.addEventListener('scroll', updateCartCounterPosition);
+  window.addEventListener('resize', updateCartCounterPosition);
+  document.addEventListener('DOMContentLoaded', updateCartCounterPosition);
+})();
+</script>
 </body>
 </html>
