@@ -100,20 +100,77 @@
         position: fixed;
         top: 60px;
         right: -100%;
-        width: 200px;
+        width: 80vw;
+        min-width: 160px;
+        max-width: 320px;
         height: calc(100vh - 60px);
         background: var(--bg-card);
         flex-direction: column;
         padding-top: 1rem;
         gap: 1rem;
-        transition: right 0.3s ease;
-        z-index: 998;
+        transition: right 0.3s cubic-bezier(.4,2,.6,1);
+        z-index: 2002;
+        overflow-y: auto;
+        box-shadow: -2px 0 16px rgba(0,0,0,0.5);
+        border-top-left-radius: 18px;
+        border-bottom-left-radius: 18px;
       }
       nav.show {
         right: 0;
       }
+      nav a {
+        font-size: 1.2rem;
+        padding: 16px 24px;
+        border-radius: 8px;
+        margin: 0 12px;
+        text-align: left;
+        background: none;
+        color: var(--accent-pink);
+        transition: background 0.2s, color 0.2s;
+      }
+      nav a:hover, nav a:focus {
+        background: var(--accent-blue);
+        color: #fff;
+      }
       #menu-toggle {
         display: flex;
+      }
+      #nav-backdrop {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.65);
+        z-index: 2001;
+        transition: opacity 0.3s;
+      }
+      #nav-backdrop.show {
+        display: block;
+      }
+    }
+    @media (max-width: 600px) {
+      header {
+        padding: 12px;
+        height: 52px;
+        min-height: 52px;
+        max-height: 52px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+      }
+      .logo {
+        font-size: 1.1rem;
+        height: 28px;
+        display: flex;
+        align-items: center;
+      }
+      nav {
+        padding-top: 60px;
+      }
+      #menu-toggle {
+        top: 12px;
+        right: 12px;
+        height: 36px;
+        width: 36px;
       }
     }
     .hero {
@@ -175,6 +232,11 @@
       align-items: center;
       flex-wrap: wrap;
     }
+    @media (max-width: 600px) {
+  .about  {
+    align-items: center;
+  }
+}
     .about img {
       flex: 0 0 340px;
       max-width: 340px;
@@ -202,13 +264,18 @@
       .about img {
         width: 100%;
         max-width: 100%;
-        height: 320px; /* POVEĆANA VISINA ZA MOBILNI */
+        height: 420px; /* POVEĆANA VISINA ZA MOBILNI */
         margin-bottom: 20px;
         align-self: center;
       }
       .about-text {
         width: 100%;
       }
+      @media (max-width: 600px) {
+  .about img {
+    height: 600px; /* još veća visina za male telefone */
+  }
+}
     }
     /* --- PROIZVODI SEKCIJA --- */
     .products-section {
@@ -326,6 +393,80 @@
       box-shadow: 0 8px 20px rgba(33, 150, 243, 0.5);
       transform: translateY(-5px);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    @media (max-width: 600px) {
+      .products-section {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+      .products-section h2 {
+        font-size: 2rem !important;
+        margin-top: 18px !important;
+        margin-bottom: 18px !important;
+        gap: 6px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .filter-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 18px;
+        width: 100%;
+      }
+      .filter-btn,
+      .filter-buttons button {
+        font-size: 1rem;
+        padding: 10px 0;
+        margin: 0;
+        border-radius: 8px;
+        min-width: 90vw;
+        background: var(--bg-card);
+        border: 1px solid #444;
+        color: var(--text-light);
+        transition: background 0.2s, color 0.2s;
+        box-shadow: 0 2px 8px #0002;
+      }
+      .filter-btn.active,
+      .filter-btn:focus,
+      .filter-buttons button.active,
+      .filter-buttons button:focus {
+        background: var(--accent-blue);
+        color: #fff;
+        outline: none;
+      }
+      #product-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        align-items: center;
+        width: 100%;
+      }
+      .product-card {
+        min-width: 0;
+        width: 96vw;
+        max-width: 370px;
+        margin: 0 auto;
+        border-radius: 16px;
+        padding: 14px 10px 18px 10px;
+        box-shadow: 0 2px 12px #0005;
+      }
+      .product-img,
+      .product-card img {
+        height: 140px;
+        border-radius: 10px;
+        object-fit: cover;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .btn-buy {
+        font-size: 1rem;
+        padding: 10px 0;
+        border-radius: 8px;
+        margin-top: 10px;
+      }
     }
     /* --- MODAL --- */
     .modal {
@@ -530,12 +671,41 @@
       font-weight: 600;
     }
     footer {
-      background: var(--bg-card);
-      color: #bbb;
       text-align: center;
-      padding: 20px;
       font-size: 0.9rem;
-      user-select: none;
+      color: #aaa;
+      background-color: var(--bg-card);
+      padding: 18px 20px 14px 20px;
+      width: 100vw;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      flex-shrink: 0;
+      /* Nema position: fixed */
+      margin: 0;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .footer-links a {
+      white-space: nowrap;
+      margin: 0 2px;
+      color: #aaa;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer-links a:hover {
+      color: var(--accent-pink);
+    }
+    footer a {
+      color: #aaa;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #fff;
     }
     #back-to-top {
       position: fixed;
@@ -623,6 +793,9 @@
   <div class="logo" tabindex="0">
     <span class="logo-pink">Invi</span><span class="logo-blue">Teens</span>
   </div>
+  <button id="menu-toggle" aria-label="Otvorite meni" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </button>
   <nav id="nav-menu" aria-label="Glavna navigacija">
     <a href="index.html" tabindex="0"><i class="fa-solid fa-house"></i> Početna</a>
     <a href="products.html" tabindex="0"><i class="fa-solid fa-envelope"></i> Pozivnice</a>
@@ -632,9 +805,7 @@
     <a href="about.html"><i class="fa-solid fa-users"></i> O nama</a>
     <a href="cart.html" tabindex="0"><i class="fa-solid fa-cart-shopping"></i> Korpa</a>
   </nav>
-  <button id="menu-toggle" aria-label="Otvorite meni" role="button" tabindex="0">
-    <span></span><span></span><span></span>
-  </button>
+  <div id="nav-backdrop"></div>
 </header>
 <div id="cart-message">Proizvod dodat u korpu!</div>
 <audio id="cart-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b7bfa.mp3" preload="auto"></audio>
@@ -662,12 +833,12 @@
   <!-- Proizvodi -->
   <section class="products-section" aria-labelledby="products-title">
     <h2 id="products-title">Naše pozivnice</h2>
-    <div class="filter-buttons" role="group" aria-label="Filter proizvoda po kategorijama">
-      <button class="filter-btn active" data-filter="all" aria-pressed="true">Sve</button>
-      <button class="filter-btn" data-filter="wedding" aria-pressed="false">Svadba</button>
-      <button class="filter-btn" data-filter="birthday" aria-pressed="false">Rođendan</button>
-      <button class="filter-btn" data-filter="custom" aria-pressed="false">Personalizovane</button>
-    </div>
+    <div class="filter-buttons">
+  <button class="filter-btn active" data-filter="all">Sve</button>
+  <button class="filter-btn" data-filter="wedding">Svadbene</button>
+  <button class="filter-btn" data-filter="birthday">Rođendanske</button>
+  <button class="filter-btn" data-filter="custom">Personalizovane</button>
+</div>
     <div id="product-list" aria-live="polite" aria-relevant="additions"></div>
   </section>
 
@@ -725,13 +896,13 @@
 <footer style="background:#222; color:#eee; padding: 30px 20px; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
   <div style="max-width: 1200px; margin: 0 auto;">
     <p style="margin: 0 0 10px;">&copy; 2025 InviTeens. Sva prava zadržana.</p>
-    <div style="margin-bottom: 15px;">
-      <a href="index.html" style="color:#eee; margin: 0 10px; text-decoration: none; font-weight: 500;">Početna</a>
-      <a href="products.html" style="color:#eee; margin: 0 10px; text-decoration: none; font-weight: 500;">Pozivnice</a>
-      <a href="custom.html" style="color:#eee; margin: 0 10px; text-decoration: none; font-weight: 500;">Pravljenje</a>
-      <a href="contact.html" style="color:#eee; margin: 0 10px; text-decoration: none; font-weight: 500;">Kontakt</a>
-      <a href="location.html" style="color:#eee; margin: 0 10px; text-decoration: none; font-weight: 500;">Lokacija</a>
-      <a href="about.html" style="color:#eee; margin: 0 10px; text-decoration: none; font-weight: 500;">O nama</a>
+    <div class="footer-links">
+      <a href="index.html">Početna</a> |
+      <a href="products.html">Pozivnice</a> |
+      <a href="custom.html">Pravljenje</a> |
+      <a href="contact.html">Kontakt</a> |
+      <a href="location.html">Lokacija</a> |
+      <a href="about.html">O nama</a>
     </div>
     <p style="font-size: 0.9rem; color: #bbb;">Prati nas na:
       <a href="https://facebook.com" target="_blank" rel="noopener" style="color:#2d53a5; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-facebook"></i> Facebook</a> |
@@ -749,15 +920,70 @@
   // Hamburger meni funkcionalnost
   const menuToggle = document.getElementById('menu-toggle');
   const navMenu = document.getElementById('nav-menu');
+  const navBackdrop = document.getElementById('nav-backdrop');
+
+  function openMenu() {
+    menuToggle.classList.add('open');
+    navMenu.classList.add('show');
+    navBackdrop.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      const firstLink = navMenu.querySelector('a');
+      if (firstLink) firstLink.focus();
+    }, 200);
+  }
+  function closeMenu() {
+    menuToggle.classList.remove('open');
+    navMenu.classList.remove('show');
+    navBackdrop.classList.remove('show');
+    document.body.style.overflow = '';
+    menuToggle.focus();
+  }
   menuToggle.addEventListener('click', () => {
-    menuToggle.classList.toggle('open');
-    navMenu.classList.toggle('show');
+    if (navMenu.classList.contains('show')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+  menuToggle.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (navMenu.classList.contains('show')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }
   });
   navMenu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
-      navMenu.classList.remove('show');
-      menuToggle.classList.remove('open');
+      if (window.innerWidth <= 900) closeMenu();
     });
+  });
+  navBackdrop.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', e => {
+    if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('show')) {
+      closeMenu();
+    }
+  });
+  let touchStartX = null;
+  document.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) {
+      touchStartX = e.touches[0].clientX;
+    }
+  });
+  document.addEventListener('touchend', function(e) {
+    if (touchStartX !== null && e.changedTouches.length === 1) {
+      let touchEndX = e.changedTouches[0].clientX;
+      if (touchStartX > window.innerWidth - 40 && touchEndX < touchStartX - 30 && !navMenu.classList.contains('show')) {
+        openMenu();
+      }
+      if (navMenu.classList.contains('show') && touchEndX > touchStartX + 30) {
+        closeMenu();
+      }
+    }
+    touchStartX = null;
   });
 
   // Proizvodi - sample data
@@ -1068,6 +1294,69 @@
   if (aboutImg) {
     aboutImg.replaceWith(aboutImg.cloneNode(true));
   }
+
+  (function() {
+  const cartCounter = document.getElementById('cart-counter');
+  const backToTopBtn = document.getElementById('back-to-top');
+  const footer = document.querySelector('footer');
+
+  function updateFloatingButtons() {
+    // Razmaci od dna ekrana
+    const cartFixedBottom = window.innerWidth <= 600 ? 12 : 24;
+    const topBtnFixedBottom = window.innerWidth <= 600 ? 12 : 30;
+
+    // Visine dugmadi
+    const cartHeight = cartCounter.offsetHeight;
+    const topBtnHeight = backToTopBtn.offsetHeight;
+
+    // Footer pozicija
+    const footerRect = footer.getBoundingClientRect();
+    const footerTop = footerRect.top + window.scrollY;
+
+    // Donje ivice prozora
+    const windowBottom = window.scrollY + window.innerHeight;
+
+    // --- CART COUNTER (desno) ---
+    if (windowBottom - cartFixedBottom > footerTop - 8) {
+      cartCounter.style.position = 'absolute';
+      cartCounter.style.right = window.innerWidth <= 600 ? '12px' : '24px';
+      cartCounter.style.left = 'auto';
+      cartCounter.style.bottom = 'auto';
+      cartCounter.style.top = (footerTop - cartHeight - 18) + 'px';
+    } else {
+      cartCounter.style.position = 'fixed';
+      cartCounter.style.right = window.innerWidth <= 600 ? '12px' : '24px';
+      cartCounter.style.left = 'auto';
+      cartCounter.style.bottom = cartFixedBottom + 'px';
+      cartCounter.style.top = 'auto';
+    }
+
+    // --- BACK TO TOP (levo) ---
+    if (window.scrollY > 300) {
+      backToTopBtn.style.display = 'block';
+    } else {
+      backToTopBtn.style.display = 'none';
+    }
+
+    if (windowBottom - topBtnFixedBottom > footerTop - 8) {
+      backToTopBtn.style.position = 'absolute';
+      backToTopBtn.style.left = window.innerWidth <= 600 ? '12px' : '30px';
+      backToTopBtn.style.right = 'auto';
+      backToTopBtn.style.bottom = 'auto';
+      backToTopBtn.style.top = (footerTop - topBtnHeight - 18) + 'px';
+    } else {
+      backToTopBtn.style.position = 'fixed';
+      backToTopBtn.style.left = window.innerWidth <= 600 ? '12px' : '30px';
+      backToTopBtn.style.right = 'auto';
+      backToTopBtn.style.bottom = topBtnFixedBottom + 'px';
+      backToTopBtn.style.top = 'auto';
+    }
+  }
+
+  window.addEventListener('scroll', updateFloatingButtons);
+  window.addEventListener('resize', updateFloatingButtons);
+  document.addEventListener('DOMContentLoaded', updateFloatingButtons);
+})();
 </script>
 
 </body>
