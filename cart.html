@@ -7,46 +7,68 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
+    :root {
+      --accent-pink: #ff4081;
+      --accent-blue: #2196f3;
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --text-light: #eee;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #121212;
-      color: #eee;
+      background: var(--bg-dark);
+      color: var(--text-light);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
     header {
+      background-color: var(--bg-card);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
       display: flex;
       align-items: center;
-      background-color: #1e1e1e;
-      padding: 20px;
-      position: relative;
-      z-index: 1000;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 999;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.7);
     }
     .logo {
       font-weight: 700;
       font-size: 1.6rem;
+      color: var(--accent-pink);
       user-select: none;
       letter-spacing: 2px;
       display: flex;
       align-items: center;
     }
-    .logo-pink {
-      color: #ff4081;
+    .logo-pink { color: var(--accent-pink); }
+    .logo-blue { color: var(--accent-blue); }
+    nav {
+      display: flex;
+      gap: 1.5rem;
     }
-    .logo-blue {
-      color: #2196f3;
+    nav a {
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: var(--accent-pink);
+      text-decoration: none;
+      transition: color 0.2s, background 0.2s;
+    }
+    nav a:hover, nav a:focus {
+      background-color: var(--accent-blue);
+      color: #fff;
+      outline: none;
     }
     #menu-toggle {
-      position: fixed;
-      top: 22px;
-      right: 22px;
-      display: flex;
+      display: none;
       flex-direction: column;
       cursor: pointer;
       gap: 5px;
-      z-index: 2001;
       background: none;
       border: none;
       padding: 0;
@@ -54,21 +76,16 @@
       width: 40px;
       align-items: center;
       justify-content: center;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      z-index: 2001;
       transition: background 0.2s;
-    }
-    #menu-toggle.open {
-      background: #1e1e1e;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px #0006;
-    }
-    #menu-toggle:focus {
-      outline: 2px solid #2196f3;
-      outline-offset: 2px;
     }
     #menu-toggle span {
       width: 25px;
       height: 3px;
-      background: #ff4081;
+      background: var(--accent-pink);
       border-radius: 2px;
       transition: 0.3s;
       display: block;
@@ -82,70 +99,77 @@
     #menu-toggle.open span:nth-child(3) {
       transform: rotate(-45deg) translate(5px, -5px);
     }
-    nav {
-      position: fixed;
-      top: 0;
-      right: -260px;
-      width: 220px;
-      height: 100vh;
-      background: #1e1e1e;
-      flex-direction: column;
-      padding-top: 80px;
-      gap: 1.2rem;
-      transition: right 0.3s cubic-bezier(.77,0,.18,1);
-      z-index: 1050;
-      box-shadow: -2px 0 10px #0008;
-      display: flex;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    nav.show {
-      right: 0;
-      visibility: visible;
-      pointer-events: auto;
-    }
-    nav a {
-      color: #ff4081;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 12px 24px;
-      font-size: 1.1rem;
-      transition: color 0.2s, background 0.2s;
-      border-radius: 6px;
-      margin: 0 10px;
-      display: block;
-    }
-    nav a:hover, nav a:focus {
-      color: #fff;
-      background: #2196f3;
-      outline: none;
-    }
-    #nav-backdrop {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 1040;
-      transition: opacity 0.3s;
-    }
-    #nav-backdrop.show {
-      display: block;
+    @media (max-width: 900px) {
+      nav {
+        position: fixed;
+        top: 60px;
+        right: -100%;
+        width: 80vw;
+        min-width: 160px;
+        max-width: 320px;
+        height: calc(100vh - 60px);
+        background: var(--bg-card);
+        flex-direction: column;
+        padding-top: 1rem;
+        gap: 1rem;
+        transition: right 0.3s cubic-bezier(.4,2,.6,1);
+        z-index: 2002;
+        overflow-y: auto;
+        box-shadow: -2px 0 16px rgba(0,0,0,0.5);
+        border-top-left-radius: 18px;
+        border-bottom-left-radius: 18px;
+      }
+      nav.show {
+        right: 0;
+      }
+      nav a {
+        font-size: 1.2rem;
+        padding: 16px 24px;
+        border-radius: 8px;
+        margin: 0 12px;
+        text-align: left;
+        background: none;
+        color: var(--accent-pink);
+        transition: background 0.2s, color 0.2s;
+      }
+      nav a:hover, nav a:focus {
+        background: var(--accent-blue);
+        color: #fff;
+      }
+      #menu-toggle {
+        display: flex;
+      }
+      #nav-backdrop {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.65);
+        z-index: 2001;
+        transition: opacity 0.3s;
+      }
+      #nav-backdrop.show {
+        display: block;
+      }
     }
     main {
       flex: 1;
+      margin-top: 60px;
+      padding-bottom: 40px;
     }
     h1 {
       text-align: center;
       margin-top: 40px;
-      color: #ff4081;
+      color: var(--accent-pink);
+      font-size: 2rem;
+      letter-spacing: 1px;
     }
     .cart-container {
       max-width: 800px;
       margin: 30px auto;
-      background: #1e1e1e;
+      background: var(--bg-card);
       border-radius: 10px;
       padding: 20px;
-      box-shadow: 0 0 10px #ff4081;
+      box-shadow: 0 0 10px var(--accent-pink);
     }
     .cart-item {
       display: flex;
@@ -160,10 +184,21 @@
     }
     .cart-item h3 {
       margin: 0;
-      color: #ff4081;
+      color: var(--accent-pink);
+    }
+    .cart-img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      float: left;
+      margin-right: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 8px var(--accent-blue);
     }
     .remove-btn {
-      background: linear-gradient(90deg,#2196f3,#ff4081);
+      background: linear-gradient(90deg,var(--accent-blue),var(--accent-pink));
       border: none;
       color: white;
       padding: 6px 12px;
@@ -174,7 +209,7 @@
       transition: background 0.2s;
     }
     .remove-btn:hover {
-      background: linear-gradient(90deg,#ff4081,#2196f3);
+      background: linear-gradient(90deg,var(--accent-pink),var(--accent-blue));
     }
     .total {
       text-align: right;
@@ -195,7 +230,7 @@
       border-top: 1px solid #444;
     }
     .checkout-btn {
-      background: linear-gradient(135deg, #ff4081, #2196f3);
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
       color: white;
       border: none;
       padding: 14px 30px;
@@ -224,7 +259,7 @@
       color: #ccc;
     }
     .clear-btn {
-      background: linear-gradient(90deg,#ff4081,#2196f3);
+      background: linear-gradient(90deg,var(--accent-pink),var(--accent-blue));
       color: white;
       border: none;
       padding: 10px 20px;
@@ -235,7 +270,7 @@
       transition: background 0.2s;
     }
     .clear-btn:hover {
-      background: linear-gradient(90deg,#2196f3,#ff4081);
+      background: linear-gradient(90deg,var(--accent-blue),var(--accent-pink));
     }
     .empty-message {
       text-align: center;
@@ -249,21 +284,22 @@
       z-index: 10;
       left: 0;
       top: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       background-color: rgba(0,0,0,0.8);
       align-items: center;
       justify-content: center;
+      overflow-y: auto;
     }
     .modal-content {
-      background-color: #1e1e1e;
+      background-color: var(--bg-card);
       margin: 10% auto;
       padding: 30px;
       border-radius: 10px;
       width: 90%;
       max-width: 400px;
       color: #fff;
-      box-shadow: 0 0 20px #ff4081;
+      box-shadow: 0 0 20px var(--accent-pink);
       text-align: center;
     }
     .modal-content input,
@@ -300,29 +336,79 @@
       color: #4caf50;
       font-size: 1.2em;
     }
+    #modalImg {
+      max-width: 300px;
+      max-height: 300px;
+      border-radius: 18px;
+      box-shadow: 0 0 30px var(--accent-blue);
+    }
     @media (max-width: 900px) {
       nav {
+        position: fixed;
+        top: 60px;
+        right: -100%;
         width: 80vw;
         min-width: 160px;
         max-width: 320px;
+        height: calc(100vh - 60px);
+        background: var(--bg-card);
+        flex-direction: column;
+        padding-top: 1rem;
+        gap: 1rem;
+        transition: right 0.3s cubic-bezier(.4,2,.6,1);
+        z-index: 2002;
+        overflow-y: auto;
+        box-shadow: -2px 0 16px rgba(0,0,0,0.5);
+        border-top-left-radius: 18px;
+        border-bottom-left-radius: 18px;
+      }
+      nav.show {
+        right: 0;
+      }
+      nav a {
+        font-size: 1.2rem;
+        padding: 16px 24px;
+        border-radius: 8px;
+        margin: 0 12px;
+        text-align: left;
+        background: none;
+        color: var(--accent-pink);
+        transition: background 0.2s, color 0.2s;
+      }
+      nav a:hover, nav a:focus {
+        background: var(--accent-blue);
+        color: #fff;
+      }
+      #menu-toggle {
+        display: flex;
+      }
+      #nav-backdrop {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.65);
+        z-index: 2001;
+        transition: opacity 0.3s;
+      }
+      #nav-backdrop.show {
+        display: block;
       }
     }
     @media (max-width: 600px) {
-      .cart-item {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .remove-btn {
-        width: 100%;
-        margin-top: 16px;
-        margin-bottom: 8px;
-        font-size: 1.1em;
-      }
       header {
         padding: 12px;
+        height: 52px;
+        min-height: 52px;
+        max-height: 52px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
       }
       .logo {
         font-size: 1.1rem;
+        height: 28px;
+        display: flex;
+        align-items: center;
       }
       nav {
         padding-top: 60px;
@@ -333,22 +419,19 @@
         height: 36px;
         width: 36px;
       }
-      footer {
-        padding: 18px 5px;
-        font-size: 0.85rem;
-      }
-      .footer-links {
-        gap: 4px;
-        font-size: 0.97em;
-      }
     }
     footer {
       text-align: center;
       font-size: 0.9rem;
       color: #aaa;
-      margin-top: 5rem;
-      background-color: #1e1e1e;
-      padding: 30px 20px;
+      background-color: var(--bg-card);
+      padding: 18px 20px 14px 20px;
+      width: 100vw;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      flex-shrink: 0;
+      /* Nema position: fixed */
+      margin: 0;
     }
     .footer-links {
       display: flex;
@@ -360,6 +443,12 @@
     .footer-links a {
       white-space: nowrap;
       margin: 0 2px;
+      color: #aaa;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer-links a:hover {
+      color: var(--accent-pink);
     }
     footer a {
       color: #aaa;
@@ -368,12 +457,16 @@
     footer a:hover {
       color: #fff;
     }
-    #modalImg {
-  max-width: 300px;
-  max-height: 300px;
-  border-radius: 18px;
-  box-shadow: 0 0 30px #2196f3;
-}
+    #nav-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
@@ -381,22 +474,22 @@
     <div class="logo" tabindex="0">
       <span class="logo-pink">Invi</span><span class="logo-blue">Teens</span>
     </div>
+    <nav id="nav-menu" aria-label="Glavna navigacija">
+      <a href="index.html" tabindex="0"><i class="fa-solid fa-house"></i> Početna</a>
+      <a href="products.html" tabindex="0"><i class="fa-solid fa-envelope"></i> Pozivnice</a>
+      <a href="custom.html" tabindex="0"><i class="fa-solid fa-pen-nib"></i> Pravljenje</a>
+      <a href="contact.html" tabindex="0"><i class="fa-solid fa-phone"></i> Kontakt</a>
+      <a href="location.html" tabindex="0"><i class="fa-solid fa-location-dot"></i> Lokacija</a>
+      <a href="about.html"><i class="fa-solid fa-users"></i> O nama</a>
+      <a href="cart.html" tabindex="0"><i class="fa-solid fa-cart-shopping"></i> Korpa</a>
+    </nav>
     <button id="menu-toggle" aria-label="Otvorite meni" role="button" tabindex="0">
       <span></span><span></span><span></span>
     </button>
-    <nav id="nav-menu" aria-label="Glavna navigacija">
-    <a href="index.html" tabindex="0"><i class="fa-solid fa-house"></i> Početna</a>
-    <a href="products.html" tabindex="0"><i class="fa-solid fa-envelope"></i> Pozivnice</a>
-    <a href="custom.html" tabindex="0"><i class="fa-solid fa-pen-nib"></i> Pravljenje</a>
-    <a href="contact.html" tabindex="0"><i class="fa-solid fa-phone"></i> Kontakt</a>
-    <a href="location.html" tabindex="0"><i class="fa-solid fa-location-dot"></i> Lokacija</a>
-    <a href="about.html"><i class="fa-solid fa-users"></i> O nama</a>
-    <a href="cart.html" tabindex="0"><i class="fa-solid fa-cart-shopping"></i> Korpa</a>
-  </nav>
     <div id="nav-backdrop"></div>
   </header>
   <main>
-    <h1>🛒 Vaša korpa</h1>
+    <h1><i class="fa-solid fa-cart-shopping"></i> Vaša korpa</h1>
     <div class="cart-container" id="cart-container"></div>
     <div class="cart-actions" id="cart-actions" style="display: none;">
       <button class="clear-btn" id="clear-cart">🗑️ Isprazni korpu</button>
@@ -406,39 +499,39 @@
       <span class="close" id="closeImgModal" style="position:absolute;top:20px;right:30px;font-size:2.5rem;cursor:pointer;color:#ff4081;">&times;</span>
       <img id="modalImg" src="" alt="Uvećana slika">
     </div>
-  </main>
-  <div id="orderModal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="closeModal">&times;</span>
-      <h3>Unesite podatke za isporuku</h3>
-      <input type="text" id="name" placeholder="Vaše ime">
-      <input type="email" id="email" placeholder="Vaš email">
-      <select id="payment">
-        <option value="kartica">💳 Plaćanje karticom</option>
-        <option value="pouzecem">💵 Plaćanje pouzećem</option>
-      </select>
-      <button id="confirmOrder">✅ Potvrdi porudžbinu</button>
+    <div id="orderModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h3>Unesite podatke za isporuku</h3>
+        <input type="text" id="name" placeholder="Vaše ime">
+        <input type="email" id="email" placeholder="Vaš email">
+        <select id="payment">
+          <option value="kartica">💳 Plaćanje karticom</option>
+          <option value="pouzecem">💵 Plaćanje pouzećem</option>
+        </select>
+        <button id="confirmOrder">✅ Potvrdi porudžbinu</button>
+      </div>
     </div>
-  </div>
+  </main>
   <footer>
     <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
     <div class="footer-links">
-      <a href="index.html">Početna</a>|
-      <a href="products.html">Pozivnice</a>|
-      <a href="custom.html">Pravljenje</a>|
-      <a href="contact.html">Kontakt</a>|
-      <a href="location.html">Lokacija</a>|
+      <a href="index.html">Početna</a> |
+      <a href="products.html">Pozivnice</a> |
+      <a href="custom.html">Pravljenje</a> |
+      <a href="contact.html">Kontakt</a> |
+      <a href="location.html">Lokacija</a> |
       <a href="about.html">O nama</a>
     </div>
     <p style="font-size: 0.9rem; color: #bbb;">Prati nas na:
-        <a href="https://facebook.com" target="_blank" rel="noopener" style="color:#2d53a5; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-facebook"></i> Facebook</a> |
-        <a href="https://instagram.com" target="_blank" rel="noopener" style="color:#c4166d; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-instagram"></i> Instagram</a> |
-        <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#1da1f2; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-twitter"></i> Twitter</a> |
-        <a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
-      </p>
+      <a href="https://facebook.com" target="_blank" rel="noopener" style="color:#2d53a5; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-facebook"></i> Facebook</a> |
+      <a href="https://instagram.com" target="_blank" rel="noopener" style="color:#c4166d; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-instagram"></i> Instagram</a> |
+      <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#1da1f2; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-twitter"></i> Twitter</a> |
+      <a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
+    </p>
   </footer>
   <script>
-    // Hamburger meni funkcionalnost
+    // Hamburger meni funkcionalnost kao na index.html
     const menuToggle = document.getElementById('menu-toggle');
     const navMenu = document.getElementById('nav-menu');
     const navBackdrop = document.getElementById('nav-backdrop');
@@ -447,6 +540,7 @@
       menuToggle.classList.add('open');
       navMenu.classList.add('show');
       navBackdrop.classList.add('show');
+      document.body.style.overflow = 'hidden';
       setTimeout(() => {
         const firstLink = navMenu.querySelector('a');
         if (firstLink) firstLink.focus();
@@ -456,9 +550,9 @@
       menuToggle.classList.remove('open');
       navMenu.classList.remove('show');
       navBackdrop.classList.remove('show');
+      document.body.style.overflow = '';
       menuToggle.focus();
     }
-
     menuToggle.addEventListener('click', () => {
       if (navMenu.classList.contains('show')) {
         closeMenu();
@@ -466,7 +560,6 @@
         openMenu();
       }
     });
-
     menuToggle.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -477,18 +570,17 @@
         }
       }
     });
-
     navMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', closeMenu);
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) closeMenu();
+      });
     });
     navBackdrop.addEventListener('click', closeMenu);
-
     document.addEventListener('keydown', e => {
       if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('show')) {
         closeMenu();
       }
     });
-
     let touchStartX = null;
     document.addEventListener('touchstart', function(e) {
       if (e.touches.length === 1) {
