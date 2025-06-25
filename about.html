@@ -22,40 +22,58 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden; /* Dodaj ovo */
     }
-    /* HEADER */
+
+    html {
+      overflow-x: hidden; /* Dodaj ovo */
+    }
+
     header {
+      background-color: var(--bg-card);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
       display: flex;
       align-items: center;
-      background-color: var(--bg-card);
-      padding: 20px;
-      position: relative;
-      z-index: 1000;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 999;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.7);
     }
     .logo {
       font-weight: 700;
       font-size: 1.6rem;
+      color: var(--accent-pink);
       user-select: none;
       letter-spacing: 2px;
       display: flex;
       align-items: center;
     }
-    .logo-pink {
-      color: var(--accent-pink);
-    }
-    .logo-blue {
-      color: var(--accent-blue);
-    }
-    /* Hamburger meni - uvek prikazan i fiksiran */
-    #menu-toggle {
-      position: fixed;
-      top: 22px;
-      right: 22px;
+    .logo-pink { color: var(--accent-pink); }
+    .logo-blue { color: var(--accent-blue); }
+    nav {
       display: flex;
+      gap: 1.5rem;
+    }
+    nav a {
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: var(--accent-pink);
+      text-decoration: none;
+      transition: color 0.2s, background 0.2s;
+    }
+    nav a:hover, nav a:focus {
+      background-color: var(--accent-blue);
+      color: #fff;
+      outline: none;
+    }
+    #menu-toggle {
+      display: none;
       flex-direction: column;
       cursor: pointer;
       gap: 5px;
-      z-index: 2001;
       background: none;
       border: none;
       padding: 0;
@@ -63,16 +81,11 @@
       width: 40px;
       align-items: center;
       justify-content: center;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      z-index: 2001;
       transition: background 0.2s;
-    }
-    #menu-toggle.open {
-      background: var(--bg-card);
-      border-radius: 50%;
-      box-shadow: 0 2px 8px #0006;
-    }
-    #menu-toggle:focus {
-      outline: 2px solid var(--accent-blue);
-      outline-offset: 2px;
     }
     #menu-toggle span {
       width: 25px;
@@ -91,69 +104,82 @@
     #menu-toggle.open span:nth-child(3) {
       transform: rotate(-45deg) translate(5px, -5px);
     }
-    /* NAVIGACIJA - uvek skrivena, otvara se sa desne strane */
-    nav {
-      position: fixed;
-      top: 0;
-      right: -260px;
-      width: 220px;
-      height: 100vh;
-      background: var(--bg-card);
-      flex-direction: column;
-      padding-top: 80px;
-      gap: 1.2rem;
-      transition: right 0.3s cubic-bezier(.77,0,.18,1);
-      z-index: 1050;
-      box-shadow: -2px 0 10px #0008;
-      display: flex;
-      visibility: hidden;
-      pointer-events: none;
+    @media (max-width: 900px) {
+      nav {
+        position: fixed;
+        top: 60px;
+        right: -100%;
+        width: 80vw;
+        min-width: 180px;
+        max-width: 340px;
+        height: calc(100vh - 60px);
+        background: var(--bg-card);
+        flex-direction: column;
+        padding-top: 2rem;
+        gap: 1.5rem;
+        transition: right 0.3s cubic-bezier(.4,2,.6,1);
+        z-index: 2002;
+        overflow-y: auto;
+        box-shadow: -2px 0 16px rgba(0,0,0,0.5);
+        border-top-left-radius: 18px;
+        border-bottom-left-radius: 18px;
+      }
+      nav.show {
+        right: 0;
+      }
+      nav a {
+        font-size: 1.2rem;
+        padding: 16px 24px;
+        border-radius: 8px;
+        margin: 0 12px;
+        text-align: left;
+        background: none;
+        color: var(--accent-pink);
+        transition: background 0.2s, color 0.2s;
+      }
+      nav a:hover, nav a:focus {
+        background: var(--accent-blue);
+        color: #fff;
+      }
+      #menu-toggle {
+        display: flex;
+      }
+      #nav-backdrop {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.65);
+        z-index: 2001;
+        transition: opacity 0.3s;
+      }
+      #nav-backdrop.show {
+        display: block;
+      }
     }
-    nav.show {
-      right: 0;
-      visibility: visible;
-      pointer-events: auto;
-    }
-    nav a {
-      color: var(--accent-pink);
-      text-decoration: none;
-      font-weight: bold;
-      padding: 12px 24px;
-      font-size: 1.1rem;
-      transition: color 0.2s, background 0.2s;
-      border-radius: 6px;
-      margin: 0 10px;
-      display: block;
-    }
-    nav a:hover, nav a:focus {
-      color: #fff;
-      background: var(--accent-blue);
-      outline: none;
-    }
-    /* Zatamnjena pozadina kad je meni otvoren */
-    #nav-backdrop {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 1040;
-      transition: opacity 0.3s;
-    }
-    #nav-backdrop.show {
-      display: block;
-    }
-    /* MAIN */
     main {
       flex: 1;
-      padding: 40px 20px;
+      margin-top: 60px; /* isto kao kontakt */
+      padding-bottom: 40px;
+      padding-left: 20px;
+      padding-right: 20px;
       max-width: 900px;
-      margin: 0 auto;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
     }
-    .section-title {
+    .section-title, h1 {
       font-size: 2rem;
       color: var(--accent-pink);
-      margin-bottom: 20px;
+      margin-top: 40px;
+      margin-bottom: 40px;
       text-align: center;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
     .content {
       background: var(--bg-card);
@@ -162,6 +188,7 @@
       box-shadow: 0 0 15px rgba(33, 150, 243, 0.3);
       line-height: 1.6;
       font-size: 1.1rem;
+      margin-bottom: 48px; /* veći razmak ispod sadržaja */
     }
     .content p {
       margin-top: 1em;
@@ -203,28 +230,34 @@
       color: var(--text-muted);
       font-size: 0.95rem;
     }
-    .social-links a {
-      display: inline-block;
-      margin: 10px;
-      color: #ccc;
-      text-decoration: none;
-    }
-    .social-links a:hover {
-      color: #fff;
-    }
     @media (max-width: 900px) {
       nav {
         width: 80vw;
-        min-width: 160px;
-        max-width: 320px;
+        min-width: 180px;
+        max-width: 340px;
+      }
+      .content {
+        padding: 18px 8px;
+      }
+      .team {
+        gap: 18px;
       }
     }
     @media (max-width: 600px) {
       header {
         padding: 12px;
+        height: 52px;
+        min-height: 52px;
+        max-height: 52px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
       }
       .logo {
         font-size: 1.1rem;
+        height: 28px;
+        display: flex;
+        align-items: center;
       }
       nav {
         padding-top: 60px;
@@ -235,23 +268,58 @@
         height: 36px;
         width: 36px;
       }
-      footer {
-        padding: 18px 5px;
-        font-size: 0.85rem;
+      main {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        max-width: 100vw !important;
+        box-sizing: border-box;
+        margin-top: 52px !important;
+        padding-bottom: 24px !important;
       }
-      .footer-links {
-        gap: 4px;
-        font-size: 0.97em;
+      .section-title, h1, h2 {
+        font-size: 2rem !important;
+        margin-top: 18px !important;
+        margin-bottom: 18px !important;
+        gap: 6px !important;
+      }
+      .content {
+        padding: 10px 6px !important;
+        margin-bottom: 24px !important;
+        font-size: 1rem !important;
+        text-align: center;
+      }
+      .team {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 12px !important;
+        margin-top: 18px !important;
+      }
+      .member {
+        width: 98vw !important;
+        max-width: 320px !important;
+        padding: 12px 4px !important;
+        margin: 0 auto !important;
+      }
+      .member img {
+        width: 80px !important;
+        height: 80px !important;
+        margin-bottom: 10px !important;
       }
     }
-    /* FOOTER */
     footer {
       text-align: center;
       font-size: 0.9rem;
       color: #aaa;
-      margin-top: 5rem;
       background-color: var(--bg-card);
-      padding: 30px 20px;
+      padding: 18px 20px 14px 20px;
+      width: 100vw;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      flex-shrink: 0;
+      /* Nema position: fixed */
+      margin: 0;
     }
     .footer-links {
       display: flex;
@@ -263,6 +331,12 @@
     .footer-links a {
       white-space: nowrap;
       margin: 0 2px;
+      color: #aaa;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer-links a:hover {
+      color: var(--accent-pink);
     }
     footer a {
       color: #aaa;
@@ -270,6 +344,17 @@
     }
     footer a:hover {
       color: #fff;
+    }
+    #nav-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1040;
+      transition: opacity 0.3s;
+    }
+    #nav-backdrop.show {
+      display: block;
     }
   </style>
 </head>
@@ -294,40 +379,40 @@
 </header>
 
 <main>
-    <h1 class="section-title">O nama</h1>
-    <div class="content">
-      <p>
-        Dobrodošli na InviTeens, Vaš pouzdan izvor za unikatne i kreativne pozivnice za sve prilike! Naš tim je posvećen da svaki detalj Vaše proslave učini posebnim i nezaboravnim.
-      </p>
-      <p>
-        Verujemo da svaka pozivnica treba da bude izraz ličnosti i emocija, zato koristimo kvalitetne materijale i pratimo najnovije trendove u dizajnu. Naša misija je da Vaš događaj ostane zauvek u lepom sećanju svim Vašim gostima.
-      </p>
+  <h1 class="section-title"><i class="fa-solid fa-user"></i></i>O nama</h1>
+  <div class="content">
+    <p>
+      Dobrodošli na InviTeens, Vaš pouzdan izvor za unikatne i kreativne pozivnice za sve prilike! Naš tim je posvećen da svaki detalj Vaše proslave učini posebnim i nezaboravnim.
+    </p>
+    <p>
+      Verujemo da svaka pozivnica treba da bude izraz ličnosti i emocija, zato koristimo kvalitetne materijale i pratimo najnovije trendove u dizajnu. Naša misija je da Vaš događaj ostane zauvek u lepom sećanju svim Vašim gostima.
+    </p>
 
-      <h2 class="section-title" style="margin-top: 40px; font-size:1.6rem;">Naš tim</h2>
-      <div class="team">
-        <div class="member">
-          <img src="InviTeens-slike/IMG_20250525_182437.jpg" alt="Milan Pavlović">
-          <h3>Milan Pavlović</h3>
-          <p>Glavni Programer</p>
-        </div>
-        <div class="member">
-          <img src="InviTeens-slike/MVIMG_20250607_152523.jpg" alt="Miona Zolotovskiy">
-          <h3>Miona Zolotovskiy</h3>
-          <p>GLavni Dizajner</p>
-        </div>
-        <!-- Po potrebi dodaj još članova tima -->
+    <h2 class="section-title" style="margin-top: 40px; font-size:1.6rem;">Naš tim</h2>
+    <div class="team">
+      <div class="member">
+        <img src="InviTeens-slike/IMG_20250525_182437.jpg" alt="Milan Pavlović">
+        <h3>Milan Pavlović</h3>
+        <p>Glavni Programer</p>
       </div>
+      <div class="member">
+        <img src="InviTeens-slike/MVIMG_20250607_152523.jpg" alt="Miona Zolotovskiy">
+        <h3>Miona Zolotovskiy</h3>
+        <p>Glavni Dizajner</p>
+      </div>
+      <!-- Po potrebi dodaj još članova tima -->
     </div>
+  </div>
 </main>
 
 <footer>
   <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
   <div class="footer-links">
-    <a href="index.html">Početna</a>|
-    <a href="products.html">Pozivnice</a>|
-    <a href="custom.html">Pravljenje</a>|
-    <a href="contact.html">Kontakt</a>|
-    <a href="location.html">Lokacija</a>|
+    <a href="index.html">Početna</a> |
+    <a href="products.html">Pozivnice</a> |
+    <a href="custom.html">Pravljenje</a> |
+    <a href="contact.html">Kontakt</a> |
+    <a href="location.html">Lokacija</a> |
     <a href="about.html">O nama</a>
   </div>
   <p style="font-size: 0.9rem; color: #bbb;">Prati nas na:
@@ -337,13 +422,11 @@
       <a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
     </p>
 </footer>
-
 <script>
-  // Hamburger meni funkcionalnost
+  // Hamburger meni funkcionalnost kao na cart.html/contact.html
   const menuToggle = document.getElementById('menu-toggle');
   const navMenu = document.getElementById('nav-menu');
   const navBackdrop = document.getElementById('nav-backdrop');
-
   function openMenu() {
     menuToggle.classList.add('open');
     navMenu.classList.add('show');
@@ -359,8 +442,6 @@
     navBackdrop.classList.remove('show');
     menuToggle.focus();
   }
-
-  // Klik na hamburger
   menuToggle.addEventListener('click', () => {
     if (navMenu.classList.contains('show')) {
       closeMenu();
@@ -368,8 +449,6 @@
       openMenu();
     }
   });
-
-  // Enter/Space za otvaranje menija (pristupačnost)
   menuToggle.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -380,21 +459,17 @@
       }
     }
   });
-
-  // Zatvori meni na klik linka ili na pozadinu
   navMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', closeMenu);
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 900) closeMenu();
+    });
   });
   navBackdrop.addEventListener('click', closeMenu);
-
-  // ESC za zatvaranje menija
   document.addEventListener('keydown', e => {
     if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('show')) {
       closeMenu();
     }
   });
-
-  // Swipe gesture za otvaranje menija (mobilni)
   let touchStartX = null;
   document.addEventListener('touchstart', function(e) {
     if (e.touches.length === 1) {
@@ -404,11 +479,9 @@
   document.addEventListener('touchend', function(e) {
     if (touchStartX !== null && e.changedTouches.length === 1) {
       let touchEndX = e.changedTouches[0].clientX;
-      // Swipe from right edge (otvori meni)
       if (touchStartX > window.innerWidth - 40 && touchEndX < touchStartX - 30 && !navMenu.classList.contains('show')) {
         openMenu();
       }
-      // Swipe left to close
       if (navMenu.classList.contains('show') && touchEndX > touchStartX + 30) {
         closeMenu();
       }
