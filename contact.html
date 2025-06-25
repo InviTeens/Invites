@@ -6,48 +6,78 @@
   <title>Kontakt | InviTeens</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <style>
+    :root {
+      --accent-pink: #ff4081;
+      --accent-blue: #2196f3;
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --text-light: #eee;
+      --text-muted: #bbb;
+      --field-bg: #fff;
+      --field-color: #222;
+      --field-border: #d1d1d1;
+    }
+    html, body {
+      height: 100%;
+      width: 100vw;
+      overflow-x: hidden;
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #121212;
-      color: #eee;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      min-width: 100vw;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
     }
-    /* HEADER */
     header {
+      background-color: var(--bg-card);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
       display: flex;
       align-items: center;
-      background-color: #1e1e1e;
-      padding: 20px;
-      position: relative;
-      z-index: 1000;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 999;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.7);
     }
     .logo {
       font-weight: 700;
       font-size: 1.6rem;
+      color: var(--accent-pink);
       user-select: none;
       letter-spacing: 2px;
       display: flex;
       align-items: center;
     }
-    .logo-pink {
-      color: #ff4081;
-    }
-    .logo-blue {
-      color: #2196f3;
-    }
-    /* Hamburger meni - uvek prikazan i fiksiran */
-    #menu-toggle {
-      position: fixed;
-      top: 22px;
-      right: 22px;
+    .logo-pink { color: var(--accent-pink); }
+    .logo-blue { color: var(--accent-blue); }
+    nav {
       display: flex;
+      gap: 1.5rem;
+    }
+    nav a {
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: var(--accent-pink);
+      text-decoration: none;
+      transition: color 0.2s, background 0.2s;
+    }
+    nav a:hover, nav a:focus {
+      background-color: var(--accent-blue);
+      color: #fff;
+      outline: none;
+    }
+    #menu-toggle {
+      display: none;
       flex-direction: column;
       cursor: pointer;
       gap: 5px;
-      z-index: 2001;
       background: none;
       border: none;
       padding: 0;
@@ -55,21 +85,16 @@
       width: 40px;
       align-items: center;
       justify-content: center;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      z-index: 2001;
       transition: background 0.2s;
-    }
-    #menu-toggle.open {
-      background: #1e1e1e;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px #0006;
-    }
-    #menu-toggle:focus {
-      outline: 2px solid #2196f3;
-      outline-offset: 2px;
     }
     #menu-toggle span {
       width: 25px;
       height: 3px;
-      background: #ff4081;
+      background: var(--accent-pink);
       border-radius: 2px;
       transition: 0.3s;
       display: block;
@@ -83,140 +108,225 @@
     #menu-toggle.open span:nth-child(3) {
       transform: rotate(-45deg) translate(5px, -5px);
     }
-    /* NAVIGACIJA - uvek skrivena, otvara se sa desne strane */
-    nav {
-      position: fixed;
-      top: 0;
-      right: -260px;
-      width: 220px;
-      height: 100vh;
-      background: #1e1e1e;
-      flex-direction: column;
-      padding-top: 80px;
-      gap: 1.2rem;
-      transition: right 0.3s cubic-bezier(.77,0,.18,1);
-      z-index: 1050;
-      box-shadow: -2px 0 10px #0008;
-      display: flex;
-      visibility: hidden;
-      pointer-events: none;
+    @media (max-width: 900px) {
+      nav {
+        position: fixed;
+        top: 60px;
+        right: -100%;
+        width: 80vw;
+        min-width: 180px;
+        max-width: 340px;
+        height: calc(100vh - 60px);
+        background: var(--bg-card);
+        flex-direction: column;
+        padding-top: 2rem;
+        gap: 1.5rem;
+        transition: right 0.3s cubic-bezier(.4,2,.6,1);
+        z-index: 2002;
+        overflow-y: auto;
+        box-shadow: -2px 0 16px rgba(0,0,0,0.5);
+        border-top-left-radius: 18px;
+        border-bottom-left-radius: 18px;
+      }
+      nav.show {
+        right: 0;
+      }
+      nav a {
+        font-size: 1.2rem;
+        padding: 16px 24px;
+        border-radius: 8px;
+        margin: 0 12px;
+        text-align: left;
+        background: none;
+        color: var(--accent-pink);
+        transition: background 0.2s, color 0.2s;
+      }
+      nav a:hover, nav a:focus {
+        background: var(--accent-blue);
+        color: #fff;
+      }
+      #menu-toggle {
+        display: flex;
+      }
+      #nav-backdrop {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.65);
+        z-index: 2001;
+        transition: opacity 0.3s;
+      }
+      #nav-backdrop.show {
+        display: block;
+      }
     }
-    nav.show {
-      right: 0;
-      visibility: visible;
-      pointer-events: auto;
-    }
-    nav a {
-      color: #ff4081;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 12px 24px;
-      font-size: 1.1rem;
-      transition: color 0.2s, background 0.2s;
-      border-radius: 6px;
-      margin: 0 10px;
-      display: block;
-    }
-    nav a:hover, nav a:focus {
-      color: #fff;
-      background: #2196f3;
-      outline: none;
-    }
-    /* Zatamnjena pozadina kad je meni otvoren */
-    #nav-backdrop {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 1040;
-      transition: opacity 0.3s;
-    }
-    #nav-backdrop.show {
-      display: block;
-    }
-    /* MAIN */
     main {
       flex: 1;
-      padding: 40px 20px;
+      margin-top: 60px;
+      padding-bottom: 40px;
+      padding-left: 20px;
+      padding-right: 20px;
       max-width: 1100px;
-      margin: 0 auto;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
     }
     h1 {
       text-align: center;
-      color: #ff4081;
+      color: var(--accent-pink);
       margin-bottom: 40px;
+      margin-top: 40px;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
     .contact-wrapper {
+      width: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 30px;
     }
     .contact-info {
-      background: #1e1e1e;
+      background: var(--bg-card);
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px #444;
+      color: var(--text-light);
+      font-size: 1.04rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
-    .contact-info h3 {
+    .contact-info ul {
+      margin: 0 0 10px 18px;
+      padding: 0;
+      color: var(--text-muted);
+      font-size: 0.98em;
+    }
+    .contact-info li {
+      margin-bottom: 7px;
+    }
+    .info-title {
+      color: var(--accent-blue);
+      font-weight: bold;
+      margin-bottom: 7px;
+      font-size: 1.08em;
+      margin-top: 18px;
+    }
+    .info-title:first-child {
       margin-top: 0;
-      color: #2196f3;
+    }
+    .social-links {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .social-links a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 1em;
+      transition: color 0.2s;
+    }
+    .social-links a:hover {
+      color: var(--accent-pink);
     }
     .contact-form {
-      background: #1e1e1e;
+      background: var(--bg-card);
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px #444;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
-    .contact-form label {
+    form label {
       display: block;
       margin-bottom: 5px;
       font-weight: bold;
+      color: var(--accent-blue);
+      letter-spacing: 0.5px;
     }
-    .contact-form input, .contact-form textarea, .contact-form select {
+    form input, form textarea, form select {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
       border: none;
       border-radius: 5px;
       font-size: 1rem;
+      background: #fff;
+      color: #222;
+      box-sizing: border-box;
+      outline: none;
     }
-    .contact-form button {
-      background-color: #2196f3;
+    form input:focus, form textarea:focus, form select:focus {
+      border: 2px solid var(--accent-blue);
+      background: #f3f8fd;
+    }
+    form textarea {
+      resize: vertical;
+      min-height: 80px;
+      max-height: 300px;
+    }
+    form button {
+      background-color: var(--accent-blue);
       color: white;
       border: none;
       padding: 12px 20px;
       font-size: 1rem;
       border-radius: 6px;
       cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+      margin-top: 10px;
+      width: 100%;
     }
-    .contact-form button:hover {
-      background-color: #1976d2;
-    }
-    .social-links a {
-      display: inline-block;
-      margin: 10px;
-      color: #ccc;
-      text-decoration: none;
-    }
-    .social-links a:hover {
+    form button:hover, form button:focus {
+      background: var(--accent-pink);
       color: #fff;
+      outline: none;
     }
     @media (max-width: 900px) {
       .contact-wrapper {
         grid-template-columns: 1fr;
+        gap: 18px;
+        align-items: center;
+        max-width: 98vw;
+        margin: 0 auto 0 auto;
       }
-      nav {
-        width: 80vw;
-        min-width: 160px;
-        max-width: 320px;
+      main {
+        max-width: 98vw;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+      .contact-info, .contact-form {
+        max-width: 98vw;
+        min-width: 0;
+        width: 100%;
+        padding: 18px 8px 10px 8px;
+        margin-bottom: 0;
       }
     }
     @media (max-width: 600px) {
       header {
         padding: 12px;
+        height: 52px;
+        min-height: 52px;
+        max-height: 52px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
       }
       .logo {
         font-size: 1.1rem;
+        height: 28px;
+        display: flex;
+        align-items: center;
       }
       nav {
         padding-top: 60px;
@@ -227,23 +337,116 @@
         height: 36px;
         width: 36px;
       }
-      footer {
-        padding: 18px 5px;
-        font-size: 0.85rem;
+      main {
+        padding-left: 6px;
+        padding-right: 6px;
       }
-      .footer-links {
-        gap: 4px;
-        font-size: 0.97em;
+      .contact-info, .contact-form {
+        padding: 10px 4px 6px 4px;
+        max-width: 99vw;
+      }
+      .contact-wrapper {
+        gap: 14px;
+      }
+      h1 {
+        font-size: 2rem !important;
+        margin-top: 18px !important;
+        margin-bottom: 18px !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        letter-spacing: 1px !important;
+      }
+      .contact-info {
+        text-align: center !important;
+        padding-top: 18px !important;
+        padding-bottom: 18px !important;
+      }
+      .contact-info ul {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+        text-align: center !important;
+        list-style-position: inside !important;
+      }
+      .contact-info li {
+        margin-bottom: 7px !important;
+        text-align: center !important;
+      }
+      .info-title {
+        text-align: center !important;
+      }
+      .social-links {
+        justify-content: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+      .contact-form {
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        padding-top: 18px !important;
+        padding-bottom: 18px !important;
+      }
+      .contact-form form {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .contact-form label {
+        text-align: left !important;
+        width: 100%;
+        font-size: 1.08em !important;
+        margin-bottom: 4px !important;
+        color: var(--accent-blue) !important;
+        font-weight: bold !important;
+        padding-left: 12%;
+      }
+      .contact-form input,
+      .contact-form textarea,
+      .contact-form select {
+        display: block;
+        width: 100% !important;         /* između centra i desne ivice */
+        max-width: 350px !important;
+        margin-left: 12% !important;   /* isto kao padding-left labela */
+        margin-bottom: 12px !important;
+        font-size: 1em !important;
+        padding: 8px 10px !important;
+        border-radius: 6px !important;
+        box-sizing: border-box;
+        text-align: left;
+      }
+      .contact-form button {
+        width: 100% !important;
+        max-width: 200px !important;
+        margin-left: 12% !important;
+        margin-top: 10px !important;
+        font-size: 1em !important;
+        padding: 10px !important;
+        border-radius: 6px !important;
+        font-weight: bold !important;
       }
     }
-    /* FOOTER */
     footer {
       text-align: center;
       font-size: 0.9rem;
       color: #aaa;
-      margin-top: 5rem;
-      background-color: #1e1e1e;
-      padding: 30px 20px;
+      background-color: var(--bg-card);
+      padding: 18px 20px 14px 20px;
+      width: 100vw;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      flex-shrink: 0;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
     }
     .footer-links {
       display: flex;
@@ -255,6 +458,12 @@
     .footer-links a {
       white-space: nowrap;
       margin: 0 2px;
+      color: #aaa;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer-links a:hover {
+      color: var(--accent-pink);
     }
     footer a {
       color: #aaa;
@@ -263,6 +472,30 @@
     footer a:hover {
       color: #fff;
     }
+    #nav-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 2001;
+      transition: opacity 0.3s;
+    }
+    #nav-backdrop.show {
+      display: block;
+    }
+    @media (max-width: 600px) {
+  footer {
+    position: static !important;
+  }
+}
+@media (max-width: 600px) {
+  #message::placeholder {
+    font-size: 1.2em !important;
+    color: #888 !important;
+    opacity: 1 !important;
+    font-family: inherit !important;
+  }
+}
   </style>
 </head>
 <body>
@@ -286,35 +519,41 @@
 </header>
 
 <main>
-  <h1>📩 Kontaktiraj nas</h1>
-
+  <h1>
+    <i class="fa-solid fa-phone-volume" style="color:var(--accent-pink);"></i>
+    Kontaktiraj nas
+  </h1>
   <div class="contact-wrapper">
     <div class="contact-info">
-      <h3>Naša adresa</h3>
-      <p>Ulica Druge srpske armije 23, Voždovac, Beograd</p>
-
-      <h3>Radno vreme</h3>
-      <p>Pon - Pet: 09:00 - 18:00<br>Subota: 10:00 - 14:00<br>Nedelja: Zatvoreno</p>
-
-      <h3>Kontakt</h3>
-      <p>Telefon: +381 11 123 456<br>Email: info@inviteens.rs</p>
-
-      <h3>Pratite nas</h3>
+      <div class="info-title">Naša adresa</div>
+      <ul>
+        <li>Ulica Druge srpske armije 23, Voždovac, Beograd</li>
+      </ul>
+      <div class="info-title" style="margin-top:18px;">Radno vreme</div>
+      <ul>
+        <li>Pon - Pet: 09:00 - 18:00</li>
+        <li>Subota: 10:00 - 14:00</li>
+        <li>Nedelja: Zatvoreno</li>
+      </ul>
+      <div class="info-title" style="margin-top:18px;">Kontakt</div>
+      <ul>
+        <li>Telefon: +381 11 123 456</li>
+        <li>Email: info@inviteens.rs</li>
+      </ul>
+      <div class="info-title" style="margin-top:18px;">Pratite nas</div>
       <div class="social-links">
-        <a href="#">Facebook</a>
-        <a href="#">Instagram</a>
-        <a href="#">Twitter</a>
+        <a href="#"><i class="fa-brands fa-facebook"></i> Facebook</a>
+        <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+        <a href="#"><i class="fa-brands fa-twitter"></i> Twitter</a>
+        <a href="#"><i class="fa-brands fa-tiktok"></i> TikTok</a>
       </div>
     </div>
-
     <div class="contact-form">
-      <form onsubmit="handleSubmit(event)">
+      <form onsubmit="handleContactSubmit(event)">
         <label for="name">Ime i prezime</label>
-        <input type="text" id="name" name="name" required />
-
+        <input type="text" id="name" name="name" placeholder="Unesite vaše ime i prezime" required />
         <label for="email">Email adresa</label>
-        <input type="email" id="email" name="email" required />
-
+        <input type="email" id="email" name="email" placeholder="npr. ivan@gmail.com" required />
         <label for="topic">Tema poruke</label>
         <select id="topic" name="topic" required>
           <option value="">-- Izaberi temu --</option>
@@ -323,10 +562,8 @@
           <option value="saradnja">Saradnja</option>
           <option value="kritika">Pohvale i sugestije</option>
         </select>
-
         <label for="message">Poruka</label>
-        <textarea id="message" name="message" rows="6" required></textarea>
-
+        <textarea id="message" name="message" rows="6" placeholder="Napišite vašu poruku, pitanje ili zahtev..." required></textarea>
         <button type="submit">Pošalji poruku</button>
       </form>
     </div>
@@ -336,22 +573,22 @@
 <footer>
   <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
   <div class="footer-links">
-    <a href="index.html">Početna</a>|
-    <a href="products.html">Pozivnice</a>|
-    <a href="custom.html">Pravljenje</a>|
-    <a href="contact.html">Kontakt</a>|
-    <a href="location.html">Lokacija</a>|
+    <a href="index.html">Početna</a> |
+    <a href="products.html">Pozivnice</a> |
+    <a href="custom.html">Pravljenje</a> |
+    <a href="contact.html">Kontakt</a> |
+    <a href="location.html">Lokacija</a> |
     <a href="about.html">O nama</a>
   </div>
   <p style="font-size: 0.9rem; color: #bbb;">Prati nas na:
       <a href="https://facebook.com" target="_blank" rel="noopener" style="color:#2d53a5; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-facebook"></i> Facebook</a> |
       <a href="https://instagram.com" target="_blank" rel="noopener" style="color:#c4166d; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-instagram"></i> Instagram</a> |
       <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#1da1f2; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-twitter"></i> Twitter</a> |
-      <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
+      <a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
     </p>
 </footer>
 <script>
-  // Hamburger meni funkcionalnost
+  // Hamburger meni funkcionalnost kao na about.html
   const menuToggle = document.getElementById('menu-toggle');
   const navMenu = document.getElementById('nav-menu');
   const navBackdrop = document.getElementById('nav-backdrop');
@@ -360,6 +597,7 @@
     menuToggle.classList.add('open');
     navMenu.classList.add('show');
     navBackdrop.classList.add('show');
+    document.body.style.overflow = 'hidden';
     setTimeout(() => {
       const firstLink = navMenu.querySelector('a');
       if (firstLink) firstLink.focus();
@@ -369,10 +607,9 @@
     menuToggle.classList.remove('open');
     navMenu.classList.remove('show');
     navBackdrop.classList.remove('show');
+    document.body.style.overflow = '';
     menuToggle.focus();
   }
-
-  // Klik na hamburger
   menuToggle.addEventListener('click', () => {
     if (navMenu.classList.contains('show')) {
       closeMenu();
@@ -380,8 +617,6 @@
       openMenu();
     }
   });
-
-  // Enter/Space za otvaranje menija (pristupačnost)
   menuToggle.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -392,21 +627,17 @@
       }
     }
   });
-
-  // Zatvori meni na klik linka ili na pozadinu
   navMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', closeMenu);
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 900) closeMenu();
+    });
   });
   navBackdrop.addEventListener('click', closeMenu);
-
-  // ESC za zatvaranje menija
   document.addEventListener('keydown', e => {
     if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('show')) {
       closeMenu();
     }
   });
-
-  // Swipe gesture za otvaranje menija (mobilni)
   let touchStartX = null;
   document.addEventListener('touchstart', function(e) {
     if (e.touches.length === 1) {
@@ -416,11 +647,9 @@
   document.addEventListener('touchend', function(e) {
     if (touchStartX !== null && e.changedTouches.length === 1) {
       let touchEndX = e.changedTouches[0].clientX;
-      // Swipe from right edge (otvori meni)
       if (touchStartX > window.innerWidth - 40 && touchEndX < touchStartX - 30 && !navMenu.classList.contains('show')) {
         openMenu();
       }
-      // Swipe left to close
       if (navMenu.classList.contains('show') && touchEndX > touchStartX + 30) {
         closeMenu();
       }
@@ -429,7 +658,7 @@
   });
 
   // Kontakt forma
-  function handleSubmit(e) {
+  function handleContactSubmit(e) {
     e.preventDefault();
     alert("Hvala! Vaša poruka je uspešno poslata.");
     e.target.reset();
