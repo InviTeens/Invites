@@ -6,48 +6,74 @@
   <title>Lokacija | InviTeens</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <style>
+    :root {
+      --accent-pink: #ff4081;
+      --accent-blue: #2196f3;
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --text-light: #eee;
+      --text-muted: #bbb;
+    }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #121212;
-      color: #eee;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden; /* Dodaj ovu liniju */
     }
-    /* HEADER */
+
+    html {
+      overflow-x: hidden; /* Dodaj ovu liniju */
+    }
+
     header {
+      background-color: var(--bg-card);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
       display: flex;
       align-items: center;
-      background-color: #1e1e1e;
-      padding: 20px;
-      position: relative;
-      z-index: 1000;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 999;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.7);
     }
     .logo {
       font-weight: 700;
       font-size: 1.6rem;
+      color: var(--accent-pink);
       user-select: none;
       letter-spacing: 2px;
       display: flex;
       align-items: center;
     }
-    .logo-pink {
-      color: #ff4081;
-    }
-    .logo-blue {
-      color: #2196f3;
-    }
-    /* Hamburger meni - uvek prikazan i fiksiran */
-    #menu-toggle {
-      position: fixed;
-      top: 22px;
-      right: 22px;
+    .logo-pink { color: var(--accent-pink); }
+    .logo-blue { color: var(--accent-blue); }
+    nav {
       display: flex;
+      gap: 1.5rem;
+    }
+    nav a {
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: var(--accent-pink);
+      text-decoration: none;
+      transition: color 0.2s, background 0.2s;
+    }
+    nav a:hover, nav a:focus {
+      background-color: var(--accent-blue);
+      color: #fff;
+      outline: none;
+    }
+    #menu-toggle {
+      display: none;
       flex-direction: column;
       cursor: pointer;
       gap: 5px;
-      z-index: 2001;
       background: none;
       border: none;
       padding: 0;
@@ -55,21 +81,16 @@
       width: 40px;
       align-items: center;
       justify-content: center;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      z-index: 2001;
       transition: background 0.2s;
-    }
-    #menu-toggle.open {
-      background: #1e1e1e;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px #0006;
-    }
-    #menu-toggle:focus {
-      outline: 2px solid #2196f3;
-      outline-offset: 2px;
     }
     #menu-toggle span {
       width: 25px;
       height: 3px;
-      background: #ff4081;
+      background: var(--accent-pink);
       border-radius: 2px;
       transition: 0.3s;
       display: block;
@@ -83,73 +104,131 @@
     #menu-toggle.open span:nth-child(3) {
       transform: rotate(-45deg) translate(5px, -5px);
     }
-    /* NAVIGACIJA - uvek skrivena, otvara se sa desne strane */
-    nav {
-      position: fixed;
-      top: 0;
-      right: -260px;
-      width: 220px;
-      height: 100vh;
-      background: #1e1e1e;
-      flex-direction: column;
-      padding-top: 80px;
-      gap: 1.2rem;
-      transition: right 0.3s cubic-bezier(.77,0,.18,1);
-      z-index: 1050;
-      box-shadow: -2px 0 10px #0008;
-      display: flex;
-      visibility: hidden;
-      pointer-events: none;
+    @media (max-width: 900px) {
+      nav {
+        position: fixed;
+        top: 60px;
+        right: -100%;
+        width: 80vw;
+        min-width: 160px;
+        max-width: 320px;
+        height: calc(100vh - 60px);
+        background: var(--bg-card);
+        flex-direction: column;
+        padding-top: 1rem;
+        gap: 1rem;
+        transition: right 0.3s cubic-bezier(.4,2,.6,1);
+        z-index: 2002;
+        overflow-y: auto;
+        box-shadow: -2px 0 16px rgba(0,0,0,0.5);
+        border-top-left-radius: 18px;
+        border-bottom-left-radius: 18px;
+      }
+      nav.show {
+        right: 0;
+      }
+      nav a {
+        font-size: 1.2rem;
+        padding: 16px 24px;
+        border-radius: 8px;
+        margin: 0 12px;
+        text-align: left;
+        background: none;
+        color: var(--accent-pink);
+        transition: background 0.2s, color 0.2s;
+      }
+      nav a:hover, nav a:focus {
+        background: var(--accent-blue);
+        color: #fff;
+      }
+      #menu-toggle {
+        display: flex;
+      }
+      #nav-backdrop {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.65);
+        z-index: 2001;
+        transition: opacity 0.3s;
+      }
+      #nav-backdrop.show {
+        display: block;
+      }
     }
-    nav.show {
-      right: 0;
-      visibility: visible;
-      pointer-events: auto;
+    @media (max-width: 600px) {
+      header {
+        padding: 12px;
+        height: 52px;
+        min-height: 52px;
+        max-height: 52px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+      }
+      .logo {
+        font-size: 1.1rem;
+        height: 28px;
+        display: flex;
+        align-items: center;
+      }
+      nav {
+        padding-top: 60px;
+      }
+      #menu-toggle {
+        top: 12px;
+        right: 12px;
+        height: 36px;
+        width: 36px;
+      }
+      h1 {
+        font-size: 2rem !important;
+        margin-top: 18px !important;
+        margin-bottom: 18px !important;
+        gap: 6px !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .info-blocks {
+        gap: 12px !important;
+        margin-bottom: 14px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        text-align: center;
+        
+      }
     }
-    nav a {
-      color: #ff4081;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 12px 24px;
-      font-size: 1.1rem;
-      transition: color 0.2s, background 0.2s;
-      border-radius: 6px;
-      margin: 0 10px;
-      display: block;
-    }
-    nav a:hover, nav a:focus {
-      color: #fff;
-      background: #2196f3;
-      outline: none;
-    }
-    /* Zatamnjena pozadina kad je meni otvoren */
-    #nav-backdrop {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 1040;
-      transition: opacity 0.3s;
-    }
-    #nav-backdrop.show {
-      display: block;
-    }
-    /* MAIN */
     main {
       flex: 1;
-      padding: 30px 20px;
-      max-width: 1200px;
-      margin: 0 auto;
+      margin-top: 60px; /* isto kao contact.html */
+      padding-bottom: 40px;
+      padding-left: 20px;
+      padding-right: 20px;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
     }
     h1 {
       text-align: center;
-      color: #ff4081;
-      margin-bottom: 30px;
+      color: var(--accent-pink);
+      margin-bottom: 40px;
+      margin-top: 40px; /* isto kao contact.html */
+      font-size: 2rem;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
     .map-container {
       width: 100%;
-      height: 600px;
-      margin-bottom: 40px;
+      height: 500px;
+      margin-bottom: 28px;
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 0 10px #2196f3;
@@ -162,34 +241,52 @@
     .info-blocks {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
+      gap: 24px;
+      margin-bottom: 24px;
     }
     .info {
-      background: #1e1e1e;
+      background: var(--bg-card);
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px #444;
     }
     .info h3 {
-      color: #2196f3;
+      color: var(--accent-blue);
       margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 1.08em;
+    }
+    .info p {
+      color: var(--text-muted);
+      margin: 0;
+      font-size: 0.98em;
     }
     @media (max-width: 900px) {
       .info-blocks {
         grid-template-columns: 1fr;
+        gap: 14px;
+        margin-bottom: 18px;
       }
       .map-container {
         height: 300px;
+        margin-bottom: 18px;
       }
-      nav {
-        width: 80vw;
-        min-width: 160px;
-        max-width: 320px;
+      main {
+        max-width: 98vw;
+        padding-left: 8px;
+        padding-right: 8px;
+        margin-top: 60px;
+      }
+      h1 {
+        font-size: 1.2rem;
+        margin-top: 18px;
+        margin-bottom: 24px;
       }
     }
     @media (max-width: 600px) {
       header {
         padding: 12px;
+        height: 52px;
       }
       .logo {
         font-size: 1.1rem;
@@ -203,23 +300,46 @@
         height: 36px;
         width: 36px;
       }
-      footer {
-        padding: 18px 5px;
-        font-size: 0.85rem;
+      main {
+        padding-left: 6px;
+        padding-right: 6px;
       }
-      .footer-links {
-        gap: 4px;
-        font-size: 0.97em;
+      h1 {
+        font-size: 2rem !important;
+        margin-top: 18px !important;
+        margin-bottom: 18px !important;
+        gap: 6px !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .map-container {
+        height: 180px;
+        margin-bottom: 10px;
+      }
+      .info-blocks {
+        gap: 12px !important;
+        margin-bottom: 14px !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      .info {
+        padding: 10px 6px;
       }
     }
-    /* FOOTER */
     footer {
       text-align: center;
       font-size: 0.9rem;
       color: #aaa;
-      margin-top: 5rem;
-      background-color: #1e1e1e;
-      padding: 30px 20px;
+      background-color: var(--bg-card);
+      padding: 18px 20px 14px 20px; /* isto kao contact.html */
+      width: 100vw;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      flex-shrink: 0;
+      /* Uklonjeno: position: fixed; left: 0; right: 0; bottom: 0; margin: 0; */
+      /* Futer će sada biti na dnu sadržaja, a ne uvek na dnu ekrana */
     }
     .footer-links {
       display: flex;
@@ -231,6 +351,12 @@
     .footer-links a {
       white-space: nowrap;
       margin: 0 2px;
+      color: #aaa;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer-links a:hover {
+      color: var(--accent-pink);
     }
     footer a {
       color: #aaa;
@@ -238,6 +364,17 @@
     }
     footer a:hover {
       color: #fff;
+    }
+    #nav-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1040;
+      transition: opacity 0.3s;
+    }
+    #nav-backdrop.show {
+      display: block;
     }
   </style>
 </head>
@@ -262,11 +399,13 @@
 </header>
 
 <main>
-  <h1>📍 Gde se nalazimo</h1>
+  <h1>
+    <i class="fa-solid fa-location-dot" style="color:var(--accent-pink);"></i>
+    Lokacija naše radnje
+  </h1>
   <div class="map-container">
     <iframe src="https://www.google.com/maps?q=Druge%20srpske%20armije%2023%2C%20Beograd&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
-
   <div class="info-blocks">
     <div class="info">
       <h3>Adresa</h3>
@@ -290,22 +429,22 @@
 <footer>
   <p>&copy; 2025 InviTeens. Sva prava zadržana.</p>
   <div class="footer-links">
-    <a href="index.html">Početna</a>|
-    <a href="products.html">Pozivnice</a>|
-    <a href="custom.html">Pravljenje</a>|
-    <a href="contact.html">Kontakt</a>|
-    <a href="location.html">Lokacija</a>|
+    <a href="index.html">Početna</a> |
+    <a href="products.html">Pozivnice</a> |
+    <a href="custom.html">Pravljenje</a> |
+    <a href="contact.html">Kontakt</a> |
+    <a href="location.html">Lokacija</a> |
     <a href="about.html">O nama</a>
   </div>
   <p style="font-size: 0.9rem; color: #bbb;">Prati nas na:
       <a href="https://facebook.com" target="_blank" rel="noopener" style="color:#2d53a5; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-facebook"></i> Facebook</a> |
       <a href="https://instagram.com" target="_blank" rel="noopener" style="color:#c4166d; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-instagram"></i> Instagram</a> |
       <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#1da1f2; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-twitter"></i> Twitter</a> |
-      <a href="https://twitter.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
+      <a href="https://tiktok.com" target="_blank" rel="noopener" style="color:#8e229c; margin-left: 8px; text-decoration: none;"><i class="fa-brands fa-tiktok"></i> Tiktok</a>
     </p>
 </footer>
 <script>
-  // Hamburger meni funkcionalnost
+  // Hamburger meni funkcionalnost kao na cart.html
   const menuToggle = document.getElementById('menu-toggle');
   const navMenu = document.getElementById('nav-menu');
   const navBackdrop = document.getElementById('nav-backdrop');
@@ -314,6 +453,7 @@
     menuToggle.classList.add('open');
     navMenu.classList.add('show');
     navBackdrop.classList.add('show');
+    document.body.style.overflow = 'hidden';
     setTimeout(() => {
       const firstLink = navMenu.querySelector('a');
       if (firstLink) firstLink.focus();
@@ -323,10 +463,9 @@
     menuToggle.classList.remove('open');
     navMenu.classList.remove('show');
     navBackdrop.classList.remove('show');
+    document.body.style.overflow = '';
     menuToggle.focus();
   }
-
-  // Klik na hamburger
   menuToggle.addEventListener('click', () => {
     if (navMenu.classList.contains('show')) {
       closeMenu();
@@ -334,8 +473,6 @@
       openMenu();
     }
   });
-
-  // Enter/Space za otvaranje menija (pristupačnost)
   menuToggle.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -346,21 +483,17 @@
       }
     }
   });
-
-  // Zatvori meni na klik linka ili na pozadinu
   navMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', closeMenu);
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 900) closeMenu();
+    });
   });
   navBackdrop.addEventListener('click', closeMenu);
-
-  // ESC za zatvaranje menija
   document.addEventListener('keydown', e => {
     if ((e.key === 'Escape' || e.key === 'Esc') && navMenu.classList.contains('show')) {
       closeMenu();
     }
   });
-
-  // Swipe gesture za otvaranje menija (mobilni)
   let touchStartX = null;
   document.addEventListener('touchstart', function(e) {
     if (e.touches.length === 1) {
@@ -370,11 +503,9 @@
   document.addEventListener('touchend', function(e) {
     if (touchStartX !== null && e.changedTouches.length === 1) {
       let touchEndX = e.changedTouches[0].clientX;
-      // Swipe from right edge (otvori meni)
       if (touchStartX > window.innerWidth - 40 && touchEndX < touchStartX - 30 && !navMenu.classList.contains('show')) {
         openMenu();
       }
-      // Swipe left to close
       if (navMenu.classList.contains('show') && touchEndX > touchStartX + 30) {
         closeMenu();
       }
